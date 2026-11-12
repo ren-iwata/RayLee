@@ -1,89 +1,2352 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#07080c" />
-  <meta name="format-detection" content="telephone=no" />
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <title>RayLee</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230E0E0C'/%3E%3Ccircle cx='24' cy='22' r='3' fill='%23E23C24'/%3E%3C/svg%3E">
+<title>RayLee — The workspace your agents inherit</title>
+<meta name="description" content="RayLee is a project workspace where your timeline and artifacts accumulate, and AI agents continue from that context — including while you’re away.">
+<style>
+:root, [data-theme="dark"] {
+  --bg: #0E0E0C;
+  --bg-2: #141412;
+  --elev: #191917;
+  --hover: #22221E;
+  --ink: #F3F1EB;
+  --ink-2: #C5C2B9;
+  --muted: #8F8C83;
+  --faint: #5E5C56;
+  --line: rgba(255,255,255,.08);
+  --line-2: rgba(255,255,255,.13);
+  --accent: #E23C24;
+  --accent-2: #FF6B55;
+  --accent-soft: rgba(226,60,36,.16);
+  --ok: #4ABA7A;
+  --ok-bg: rgba(74,186,122,.14);
+  --run: #7EB0E0;
+  --run-bg: rgba(126,176,224,.14);
+  --wait: #E0B05A;
+  --wait-bg: rgba(224,176,90,.14);
+  --shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 64px rgba(0,0,0,.5);
+  --shadow-sm: 0 0 0 1px rgba(255,255,255,.06), 0 8px 24px rgba(0,0,0,.28);
+  --sidebar: #0A0A09;
+  --sb-t: #EDEBE6;
+  --sb-m: #8A877E;
+  --input-bg: #10100E;
+  --kbd-bg: #2A2A26;
+  --overlay: rgba(0,0,0,.62);
+  --toast-bg: #F3F1EB;
+  --toast-ink: #141413;
+  --selection: rgba(226,60,36,.28);
+}
+[data-theme="light"] {
+  --bg: #F3F1EB;
+  --bg-2: #E9E6DE;
+  --elev: #FFFFFF;
+  --hover: #F6F4EE;
+  --ink: #141413;
+  --ink-2: #3B3A36;
+  --muted: #6B6962;
+  --faint: #9A978E;
+  --line: rgba(20,20,19,.09);
+  --line-2: rgba(20,20,19,.15);
+  --accent: #D43820;
+  --accent-2: #C4301A;
+  --accent-soft: rgba(212,56,32,.1);
+  --ok: #1F7A4C;
+  --ok-bg: rgba(31,122,76,.1);
+  --run: #1A5F9E;
+  --run-bg: rgba(26,95,158,.1);
+  --wait: #8F5E0A;
+  --wait-bg: rgba(143,94,10,.1);
+  --shadow: 0 1px 2px rgba(20,20,19,.05), 0 16px 48px rgba(20,20,19,.1);
+  --shadow-sm: 0 1px 2px rgba(20,20,19,.05), 0 6px 16px rgba(20,20,19,.06);
+  --sidebar: #161615;
+  --sb-t: #EDEBE6;
+  --sb-m: #9A978E;
+  --input-bg: #fff;
+  --kbd-bg: #ECE9E1;
+  --overlay: rgba(20,20,19,.4);
+  --toast-bg: #141413;
+  --toast-ink: #F3F1EB;
+  --selection: rgba(212,56,32,.2);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+html { background: var(--bg); color-scheme: dark; }
+html[data-theme="light"] { color-scheme: light; }
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 13.5px;
+  line-height: 1.5;
+  letter-spacing: -.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: var(--selection); }
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tabular { font-variant-numeric: tabular-nums; }
+kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 4px; background: var(--kbd-bg);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 10.5px; font-weight: 550; color: var(--muted);
+  border: 1px solid var(--line-2);
+}
+
+.app { display: flex; min-height: 100%; }
+.sidebar {
+  width: 244px; flex-shrink: 0;
+  background: var(--sidebar);
+  color: var(--sb-t);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh; z-index: 40;
+  border-right: 1px solid rgba(255,255,255,.05);
+}
+.brand {
+  display: flex; align-items: baseline; gap: 0;
+  padding: 22px 20px 4px;
+  font-weight: 650; font-size: 17px;
+  letter-spacing: -.04em;
+}
+.brand .dot { color: var(--accent); }
+.tagline {
+  padding: 0 20px 18px;
+  font-size: 11.5px; color: var(--sb-m);
+  letter-spacing: -.005em; line-height: 1.45;
+  font-weight: 450;
+}
+.nav { display: flex; flex-direction: column; gap: 1px; padding: 0 10px; flex: 1; overflow: auto; }
+.nav a, .nav button.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 7px;
+  color: var(--sb-m); width: 100%; text-align: left; font-size: 13px;
+  transition: background .12s, color .12s;
+}
+.nav a:hover, .nav button.nav-item:hover { background: rgba(255,255,255,.05); color: #F3F1EB; }
+.nav a.active { background: rgba(255,255,255,.08); color: #fff; font-weight: 600; }
+.nav svg { width: 15px; height: 15px; flex-shrink: 0; opacity: .85; }
+.nav-sec { margin: 16px 10px 5px; font-size: 10px; color: var(--sb-m); letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+.nav-badge {
+  margin-left: auto; background: var(--accent); color: #fff;
+  font-size: 10px; font-weight: 700; min-width: 17px; height: 17px;
+  border-radius: 99px; display: inline-grid; place-items: center; padding: 0 5px;
+}
+.sb-cmd {
+  margin: 4px 12px 10px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: 8px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+  color: var(--sb-m); font-size: 12.5px; width: calc(100% - 24px);
+}
+.sb-cmd:hover { background: rgba(255,255,255,.07); color: #fff; }
+.sb-cmd span { flex: 1; text-align: left; }
+.sb-foot { padding: 10px 10px 12px; border-top: 1px solid rgba(255,255,255,.06); }
+.sb-user { display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 8px; color: #EDEBE6; }
+.sb-user:hover { background: rgba(255,255,255,.05); }
+.sb-user .meta { font-size: 11px; color: var(--sb-m); }
+
+.mainwrap { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 100vh; }
+.topbar {
+  height: 52px; display: flex; align-items: center; gap: 12px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  position: sticky; top: 0; z-index: 20;
+}
+.topbar h1 { font-size: 13.5px; font-weight: 600; letter-spacing: -.02em; flex: 1; min-width: 0; }
+.topbar .crumb { color: var(--muted); font-weight: 450; }
+.icon-btn {
+  width: 32px; height: 32px; border-radius: 7px;
+  display: grid; place-items: center; color: var(--ink-2); position: relative;
+  transition: background .12s;
+}
+.icon-btn:hover { background: var(--hover); color: var(--ink); }
+.icon-btn .dot {
+  position: absolute; top: 5px; right: 5px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg);
+}
+.menu-btn { display: none; }
+.content { padding: 28px 32px 80px; max-width: 1120px; width: 100%; }
+.content.wide { max-width: 1280px; }
+.page-enter { animation: rise .28s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.banner {
+  background: var(--elev);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12.5px; color: var(--muted);
+  margin-bottom: 24px;
+  display: flex; gap: 10px; align-items: center;
+}
+.banner strong { color: var(--ink-2); font-weight: 600; }
+.banner p { flex: 1; min-width: 0; margin: 0; }
+.banner button { margin-left: 8px; flex-shrink: 0; color: var(--muted); font-size: 12px; font-weight: 600; }
+.banner button:hover { color: var(--ink); }
+
+.hello { margin-bottom: 22px; }
+.hello .greet { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.hello h2 { font-size: 26px; font-weight: 620; letter-spacing: -.038em; line-height: 1.2; }
+.hello .prop { margin-top: 6px; color: var(--muted); font-size: 14px; letter-spacing: -.015em; }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 22px; }
+.metric {
+  background: var(--elev); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+  transition: border-color .15s;
+}
+.metric:hover { border-color: var(--line-2); }
+.metric .lbl { font-size: 11.5px; color: var(--muted); margin-bottom: 5px; font-weight: 550; }
+.metric .val { font-size: 21px; font-weight: 640; letter-spacing: -.04em; line-height: 1.15; }
+.metric .sub { font-size: 11.5px; color: var(--faint); margin-top: 5px; }
+
+.grid-2 { display: grid; grid-template-columns: 1.45fr .95fr; gap: 14px; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+
+.card {
+  background: var(--elev);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.card-hd { display: flex; align-items: center; gap: 10px; padding: 14px 18px 0; }
+.card-hd h2 { font-size: 12.5px; font-weight: 650; flex: 1; letter-spacing: -.01em; }
+.card-bd { padding: 14px 18px 18px; }
+.card-ft { padding: 10px 18px 14px; border-top: 1px solid var(--line); font-size: 12.5px; }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  height: 20px; padding: 0 7px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; background: var(--bg-2); color: var(--ink-2);
+  white-space: nowrap; letter-spacing: -.01em;
+}
+.pill.ok { background: var(--ok-bg); color: var(--ok); }
+.pill.run { background: var(--run-bg); color: var(--run); }
+.pill.wait { background: var(--wait-bg); color: var(--wait); }
+.pill.muted { background: var(--bg-2); color: var(--muted); }
+.pill.accent { background: var(--accent-soft); color: var(--accent-2); }
+.pill.sample { background: var(--bg-2); color: var(--muted); font-weight: 550; letter-spacing: .02em; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 32px; padding: 0 12px; border-radius: 7px;
+  font-size: 12.5px; font-weight: 600; letter-spacing: -.01em;
+  background: var(--ink); color: var(--bg);
+  border: 1px solid transparent;
+  transition: transform .12s, opacity .12s, background .12s;
+}
+.btn:hover { opacity: .9; }
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
+.btn.ghost:hover { background: var(--hover); opacity: 1; }
+.btn.soft { background: var(--bg-2); color: var(--ink); }
+.btn.soft:hover { background: var(--hover); opacity: 1; }
+.btn.danger { background: transparent; color: var(--accent); border: 1px solid var(--accent-soft); }
+.btn.danger:hover { background: var(--accent-soft); opacity: 1; }
+.btn.sm { height: 26px; padding: 0 9px; font-size: 12px; }
+.btn.block { width: 100%; }
+
+.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.spacer { flex: 1; }
+.muted { color: var(--muted); }
+.faint { color: var(--faint); }
+.small { font-size: 12.5px; }
+.tiny { font-size: 11.5px; }
+.strong { font-weight: 600; }
+.mt-8 { margin-top: 8px; } .mt-12 { margin-top: 12px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; } .mb-12 { margin-bottom: 12px; } .mb-16 { margin-bottom: 16px; }
+
+.list-item { display: flex; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); align-items: flex-start; }
+.list-item:first-child { border-top: 0; padding-top: 2px; }
+.list-item .body { flex: 1; min-width: 0; }
+.list-item .title { font-weight: 600; font-size: 13px; letter-spacing: -.015em; }
+.list-item .desc { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.list-item a.title:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+.proj-card { display: block; padding: 16px 18px; border-bottom: 1px solid var(--line); transition: background .12s; }
+.proj-card:last-child { border-bottom: 0; }
+.proj-card:hover { background: var(--hover); }
+.proj-card h3 { font-size: 14px; font-weight: 630; letter-spacing: -.02em; }
+.proj-name-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.proj-name-row h3 { margin: 0; }
+
+.timeline { position: relative; padding-left: 20px; }
+.timeline::before { content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 1px; background: var(--line-2); }
+.tl-item { position: relative; padding: 0 0 22px 8px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item::before {
+  content: ""; position: absolute; left: -16px; top: 7px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--elev); border: 2px solid var(--ink);
+}
+.tl-item.agent::before { border-color: var(--run); background: var(--run-bg); }
+.tl-item.branch::before { border-color: var(--accent); background: var(--accent-soft); }
+.tl-when { font-size: 11.5px; color: var(--muted); margin-bottom: 3px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.tl-what { font-size: 13.5px; letter-spacing: -.012em; }
+.tl-moved {
+  margin-top: 7px; font-size: 12.5px; color: var(--ink-2);
+  background: var(--bg); border-radius: 7px; padding: 7px 10px;
+  border: 1px solid var(--line);
+}
+.tl-moved span { color: var(--muted); margin-right: 6px; font-size: 10.5px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
+.tl-meta { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 11.5px; color: var(--muted); }
+
+.branch-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; background: var(--bg); }
+.branch-flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+.branch-flow .box { background: var(--elev); border: 1px solid var(--line); border-radius: 7px; padding: 6px 10px; font-size: 12.5px; max-width: 280px; }
+.branch-flow .box.to { border-color: var(--ink-2); font-weight: 600; }
+.branch-flow .arrow { color: var(--muted); }
+
+.form-grid { display: grid; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.field .hint { font-size: 11.5px; color: var(--muted); font-weight: 400; }
+.field input[type="text"], .field input[type="search"], .field input[type="datetime-local"],
+.field input[type="number"], .field textarea, .field select,
+input[type="text"], input[type="search"] {
+  border: 1px solid var(--line-2); background: var(--input-bg);
+  border-radius: 8px; padding: 8px 10px; min-height: 34px; color: var(--ink);
+}
+.field textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
+.field input:focus, .field textarea:focus, .field select:focus,
+input[type="text"]:focus, input[type="search"]:focus {
+  outline: none; border-color: var(--ink-2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
+.check input { margin-top: 3px; accent-color: var(--accent); }
+
+.table-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.data th {
+  text-align: left; font-size: 11px; font-weight: 620; color: var(--muted);
+  padding: 8px 12px; border-bottom: 1px solid var(--line); white-space: nowrap;
+  letter-spacing: .03em; text-transform: uppercase;
+}
+table.data td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.data tr:last-child td { border-bottom: 0; }
+table.data tr:hover td { background: var(--hover); }
+
+.usage { height: 6px; background: var(--bg-2); border-radius: 99px; overflow: hidden; margin: 8px 0; }
+.usage > span { display: block; height: 100%; background: var(--ink); border-radius: 99px; transition: width .4s ease; }
+.usage.warn > span { background: var(--wait); }
+.usage.full > span { background: var(--accent); }
+
+.av { width: 32px; height: 32px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; letter-spacing: -.02em; }
+.av.lg { width: 68px; height: 68px; font-size: 24px; }
+.av.sm { width: 22px; height: 22px; font-size: 10px; }
+.model-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
+.agent-job { padding: 14px 0; border-top: 1px solid var(--line); }
+.agent-job:first-child { border-top: 0; padding-top: 0; }
+.agent-job h3 { font-size: 13.5px; font-weight: 630; letter-spacing: -.015em; }
+.pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--run); box-shadow: 0 0 0 0 rgba(126,176,224,.5); animation: pulse 1.6s infinite; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(126,176,224,.45); }
+  70% { box-shadow: 0 0 0 8px rgba(126,176,224,0); }
+  100% { box-shadow: 0 0 0 0 rgba(126,176,224,0); }
+}
+.progress-ind { height: 2px; background: var(--bg-2); border-radius: 99px; overflow: hidden; margin-top: 10px; }
+.progress-ind > span { display: block; height: 100%; width: 40%; background: var(--run); animation: indet 1.4s ease-in-out infinite; }
+@keyframes indet { 0% { transform: translateX(-120%); } 100% { transform: translateX(320%); } }
+
+.feed-item { background: var(--elev); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px 12px; margin-bottom: 10px; transition: border-color .15s; }
+.feed-item:hover { border-color: var(--line-2); }
+.feed-head { display: flex; gap: 12px; align-items: flex-start; }
+.feed-head .who { font-weight: 640; letter-spacing: -.015em; }
+.feed-head .who:hover { text-decoration: underline; text-underline-offset: 2px; }
+.feed-body { margin: 10px 0 8px 44px; }
+.feed-body p { font-size: 14px; letter-spacing: -.012em; }
+.feed-acts { margin-left: 44px; display: flex; gap: 4px; padding-top: 6px; border-top: 1px solid var(--line); margin-top: 8px; }
+.react-btn { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 9px; border-radius: 6px; font-size: 12.5px; color: var(--muted); font-weight: 550; transition: background .12s, color .12s, transform .15s; }
+.react-btn:hover { background: var(--hover); color: var(--ink); }
+.react-btn.on { color: var(--accent); }
+.react-btn.on svg { fill: currentColor; }
+.react-btn.pop { animation: pop .28s ease; }
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+.comments { margin: 10px 0 4px 44px; }
+.comment { display: flex; gap: 8px; padding: 8px 0; font-size: 13px; }
+.comment .c-body { background: var(--bg); border-radius: 8px; padding: 8px 10px; flex: 1; border: 1px solid var(--line); }
+.comment-form { display: flex; gap: 8px; margin-top: 6px; align-items: flex-start; }
+.comment-form input[type="text"] { flex: 1; border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 10px; min-height: 34px; background: var(--input-bg); }
+
+.profile-hd { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 24px; }
+.profile-hd h2 { font-size: 24px; font-weight: 640; letter-spacing: -.035em; }
+.counts { display: flex; gap: 18px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+.counts strong { font-weight: 650; color: var(--ink); }
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+.tabs button { padding: 10px 16px; font-size: 13px; font-weight: 600; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; letter-spacing: -.01em; }
+.tabs button.active { color: var(--ink); border-bottom-color: var(--ink); }
+.tabs button:hover { color: var(--ink); }
+
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.chip {
+  height: 26px; padding: 0 10px; border-radius: 99px;
+  border: 1px solid var(--line-2); background: transparent;
+  font-size: 12.5px; font-weight: 550; color: var(--ink-2);
+  transition: background .12s, color .12s, border-color .12s;
+}
+.chip:hover { background: var(--hover); color: var(--ink); }
+.chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.map-canvas { background: var(--elev); border: 1px solid var(--line); border-radius: 12px; padding: 16px 8px 8px; overflow-x: auto; }
+.map-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin: 0 12px 8px; }
+.map-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
+.map-tip { margin: 10px 12px 12px; padding: 10px 14px; background: var(--bg); border-radius: 8px; font-size: 13px; min-height: 48px; border: 1px solid var(--line); }
+
+.preview-block { position: relative; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 16px; background: var(--elev); min-height: 140px; }
+.preview-blur { filter: blur(4px); opacity: .5; pointer-events: none; user-select: none; padding: 20px; }
+.preview-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; background: color-mix(in srgb, var(--bg) 50%, transparent); }
+.preview-overlay h3 { font-size: 15px; margin: 8px 0 6px; letter-spacing: -.02em; }
+.preview-overlay p { font-size: 12.5px; color: var(--muted); max-width: 440px; }
+
+.price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.price-card { padding: 22px; position: relative; }
+.price-card.current { border-color: var(--ink-2); box-shadow: 0 0 0 1px var(--ink-2); }
+.price-card .plan { font-size: 12px; font-weight: 650; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.price-card .yen { font-size: 32px; font-weight: 640; letter-spacing: -.045em; margin: 8px 0; }
+.price-card .yen span { font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+.price-card ul { list-style: none; margin: 16px 0; }
+.price-card li { padding: 6px 0 6px 16px; position: relative; font-size: 13.5px; }
+.price-card li::before { content: ""; width: 5px; height: 5px; background: var(--ink); border-radius: 50%; position: absolute; left: 0; top: 13px; }
+
+.market-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.market-card { display: block; padding: 16px; background: var(--elev); border: 1px solid var(--line); border-radius: 12px; transition: border-color .15s, transform .15s; }
+.market-card:hover { border-color: var(--line-2); transform: translateY(-1px); }
+.market-card h3 { font-size: 14.5px; font-weight: 630; letter-spacing: -.02em; margin: 8px 0 6px; }
+.market-card .price { font-size: 18px; font-weight: 640; letter-spacing: -.03em; margin-top: 10px; }
+.market-card .price span { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+
+.notif-wrap { position: relative; }
+.notif-panel {
+  position: absolute; right: 0; top: calc(100% + 8px);
+  width: 390px; max-width: calc(100vw - 24px); max-height: 70vh; overflow: auto;
+  background: var(--elev); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: var(--shadow); z-index: 50;
+  animation: palIn .16s ease;
+}
+.notif { display: flex; gap: 10px; padding: 11px 14px; border-top: 1px solid var(--line); font-size: 13px; text-align: left; width: 100%; color: inherit; }
+.notif:hover { background: var(--hover); }
+.notif.unread { background: color-mix(in srgb, var(--accent) 6%, var(--elev)); }
+.notif .n-time { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.modal-bg, .cmdk-bg, .onb-bg {
+  position: fixed; inset: 0; background: var(--overlay);
+  z-index: 70; display: flex; align-items: flex-start; justify-content: center;
+  padding: 12vh 16px 16px; overflow: auto;
+  animation: fade .16s ease;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--elev); border-radius: 14px; width: 100%; max-width: 540px;
+  box-shadow: var(--shadow); padding: 22px 22px 20px;
+  border: 1px solid var(--line); animation: palIn .18s ease;
+}
+.modal h2 { font-size: 16px; font-weight: 640; margin-bottom: 14px; letter-spacing: -.02em; }
+@keyframes palIn { from { opacity: 0; transform: scale(.98) translateY(6px); } to { opacity: 1; transform: none; } }
+
+.cmdk-bg { align-items: flex-start; padding-top: 18vh; z-index: 80; }
+.cmdk {
+  width: 100%; max-width: 620px; background: var(--elev);
+  border: 1px solid var(--line-2); border-radius: 14px;
+  box-shadow: var(--shadow); overflow: hidden; animation: palIn .15s ease;
+  display: flex; flex-direction: column; max-height: min(72vh, 640px);
+}
+.cmdk-list { flex: 1; min-height: 0; overflow-y: auto; }
+.cmdk-in { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.cmdk-in svg { color: var(--muted); flex-shrink: 0; }
+.cmdk-in input, .cmdk-in input[type="search"], .cmdk-in input[type="text"] {
+  flex: 1; border: 0 !important; box-shadow: none !important;
+  background: transparent !important; min-height: 28px; padding: 0 !important;
+  border-radius: 0; font-size: 15px; letter-spacing: -.015em; outline: none;
+  -webkit-appearance: none; appearance: none;
+}
+.cmdk-list { padding-bottom: 6px; }
+.cmdk-item { padding: 7px 10px; }
+.cmdk-list { max-height: 380px; overflow: auto; padding: 8px; }
+.cmdk-group { font-size: 10.5px; font-weight: 650; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; padding: 8px 8px 4px; }
+.cmdk-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; color: var(--ink); }
+.cmdk-item:hover, .cmdk-item.on { background: var(--hover); }
+.cmdk-item .hint { margin-left: auto; color: var(--faint); font-size: 11.5px; }
+.cmdk-foot { display: flex; gap: 14px; padding: 8px 14px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--muted); flex-shrink: 0; background: var(--elev); position: relative; z-index: 2; }
+.cmdk-empty { padding: 28px; text-align: center; color: var(--muted); }
+
+.onb-bg { align-items: center; padding: 24px; z-index: 90; }
+.onb {
+  width: 100%; max-width: 480px; background: var(--elev);
+  border: 1px solid var(--line); border-radius: 18px;
+  box-shadow: var(--shadow); padding: 36px 36px 28px;
+  animation: palIn .22s ease;
+}
+.onb .step-dots { display: flex; gap: 6px; margin-bottom: 22px; }
+.onb .step-dots i { width: 18px; height: 3px; border-radius: 99px; background: var(--line-2); }
+.onb .step-dots i.on { background: var(--ink); }
+.onb h2 { font-size: 24px; font-weight: 630; letter-spacing: -.035em; line-height: 1.25; margin-bottom: 10px; }
+.onb p { color: var(--muted); font-size: 14.5px; line-height: 1.55; letter-spacing: -.01em; }
+.onb .actions { display: flex; gap: 8px; margin-top: 28px; align-items: center; }
+.onb .brand-mini { font-weight: 650; letter-spacing: -.04em; margin-bottom: 16px; font-size: 16px; }
+.onb .brand-mini .dot { color: var(--accent); }
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--toast-bg); color: var(--toast-ink);
+  padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 550;
+  z-index: 100; box-shadow: var(--shadow-sm); max-width: 90vw;
+  animation: rise .22s ease;
+}
+@media (max-width: 880px) { .toast { bottom: 84px; } }
+
+.bottomnav { display: none; }
+.backdrop { display: none; position: fixed; inset: 0; background: var(--overlay); z-index: 35; }
+.backdrop.on { display: block; }
+.empty { text-align: center; padding: 48px 20px; color: var(--muted); }
+.empty h3 { color: var(--ink); font-size: 16px; font-weight: 630; letter-spacing: -.02em; margin: 12px 0 6px; }
+.empty p { font-size: 13.5px; max-width: 380px; margin: 0 auto 16px; }
+.empty-ico { width: 48px; height: 48px; margin: 0 auto; border-radius: 12px; background: var(--bg-2); display: grid; place-items: center; color: var(--muted); }
+
+.settings-block { margin-bottom: 32px; max-width: 560px; }
+.settings-block h2 { font-size: 15px; font-weight: 640; letter-spacing: -.02em; margin-bottom: 4px; }
+.settings-block .lead { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
+.model-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); }
+.link { color: var(--ink); font-weight: 600; }
+.link:hover { text-decoration: underline; text-underline-offset: 2px; }
+.shortcuts { display: grid; gap: 0; }
+.shortcuts div { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); font-size: 13px; }
+.shortcuts span { color: var(--muted); }
+
+.away-card { padding: 12px 0; border-top: 1px solid var(--line); }
+.away-card:first-child { border-top: 0; padding-top: 0; }
+
+@media (max-width: 1080px) {
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .grid-2, .price-grid, .market-grid { grid-template-columns: 1fr; }
+  .feed-body, .feed-acts, .comments { margin-left: 0; }
+}
+@media (max-width: 880px) {
+  .sidebar { position: fixed; left: 0; top: 0; transform: translateX(-100%); transition: transform .2s ease; box-shadow: var(--shadow); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-btn { display: grid; }
+  .topbar { padding: 0 14px; }
+  .content { padding: 18px 16px 100px; }
+  .hello h2 { font-size: 22px; }
+  .bottomnav {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0;
+    height: calc(56px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line); z-index: 30; justify-content: space-around;
+  }
+  .bottomnav a, .bottomnav button {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; font-size: 10px; font-weight: 620; color: var(--muted); position: relative;
+  }
+  .bottomnav a.active, .bottomnav button.active { color: var(--ink); }
+  .bottomnav svg { width: 19px; height: 19px; }
+  .bottomnav .ndot { position: absolute; top: 4px; right: calc(50% - 15px); width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+  .hide-sm { display: none !important; }
+  .profile-hd { flex-direction: column; gap: 12px; }
+  .modal { padding: 18px 16px; }
+  .onb { padding: 28px 22px 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
 </head>
 <body>
-  <div id="app">
-    <canvas id="universe" aria-label="星図"></canvas>
+<div id="app"></div>
+<script>
+(function () {
+  "use strict";
 
-    <div id="hud" hidden>
-      <div class="hud-top">
-        <div id="currency" class="currency" aria-live="polite"></div>
-        <div class="hud-actions">
-          <button type="button" id="btn-my-star" class="icon-btn" aria-label="自分の星へ">✦</button>
-          <button type="button" id="btn-zoom-out" class="icon-btn" aria-label="宇宙をひく">◎</button>
-          <button type="button" id="btn-proto" class="icon-btn proto-btn" aria-label="試作メニュー">試</button>
-        </div>
-      </div>
-    </div>
+  var KEY = "raylee-saas-en-v1";
+  var THEME_KEY = "raylee-theme";
+  var SELF = "u-david";
+  var LIMITS = { free: 50, pro: 500 };
+  var FEE = 10;
+  var MODELS = [
+    { id: "claude-sonnet-4", name: "Claude Sonnet 4", provider: "Anthropic", color: "#D97757" },
+    { id: "gpt-4o", name: "GPT-4o", provider: "OpenAI", color: "#10A37F" },
+    { id: "gemini-2-5-pro", name: "Gemini 2.5 Pro", provider: "Google", color: "#4285F4" },
+    { id: "grok-4", name: "Grok 4", provider: "xAI", color: "#1D9BF0" },
+    { id: "llama-3-70b", name: "Llama 3 70B (local)", provider: "Local", color: "#5856D6" }
+  ];
+  var ASSET_TYPES = ["Deliverable", "Data", "Verification", "Note", "Tool"];
+  var VIS = { public: "Public", followers: "Followers", private: "Private" };
+  var AV = { "u-david": "#2C3A4A", "u-maya": "#6B3F4F", "u-nathan": "#2F4A43", "u-ellen": "#4A3F2F" };
 
-    <div id="whispers" aria-live="polite"></div>
+  var ui = {
+    modal: null, notifOpen: false, menuOpen: false, toast: null, toastTimer: null,
+    feedFilter: "all", assetType: "all", assetProj: "all", assetVerified: "all",
+    agentFilter: "all", profileTab: "timeline", mapTip: null, commentsOpen: {},
+    pendingRender: false, cmdOpen: false, cmdQuery: "", cmdIndex: 0, cmdItems: [],
+    onbStep: 0, shortcutsOpen: false, marketFilter: "all", marketOpen: null,
+    bannerDismissed: false, goChord: false
+  };
+  var state = null;
 
-    <div id="sheet" class="sheet" hidden>
-      <div class="sheet-handle" aria-hidden="true"></div>
-      <button type="button" class="sheet-close" id="sheet-close" aria-label="閉じる">×</button>
-      <div id="sheet-body" class="sheet-body"></div>
-    </div>
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+  function uid(p) { return (p || "id") + "-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function nowISO() { return new Date().toISOString(); }
+  function fmtDT(iso) {
+    if (!iso) return "";
+    var d = new Date(iso);
+    return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }).format(d);
+  }
+  function fmtD(iso) {
+    if (!iso) return "";
+    return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(new Date(iso));
+  }
+  function fmtRel(iso) {
+    if (!iso) return "";
+    var s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+    if (s < 60) return "Just now";
+    if (s < 3600) return Math.floor(s / 60) + "m ago";
+    if (s < 86400) return Math.floor(s / 3600) + "h ago";
+    if (s < 86400 * 2) return "Yesterday";
+    if (s < 86400 * 7) return Math.floor(s / 86400) + "d ago";
+    return fmtD(iso);
+  }
+  function toLocalInput(iso) {
+    var x = iso ? new Date(iso) : new Date();
+    var p = function (n) { return String(n).padStart(2, "0"); };
+    return x.getFullYear() + "-" + p(x.getMonth() + 1) + "-" + p(x.getDate()) + "T" + p(x.getHours()) + ":" + p(x.getMinutes());
+  }
+  function fromLocalInput(v) { return v ? new Date(v).toISOString() : nowISO(); }
+  function greeting() {
+    var h = new Date().getHours();
+    if (h < 5) return "Good night";
+    if (h < 12) return "Good morning";
+    if (h < 17) return "Good afternoon";
+    return "Good evening";
+  }
 
-    <div id="hearing" class="overlay" hidden>
-      <div class="hearing-inner">
-        <p id="hearing-line" class="hearing-line"></p>
-        <div id="hearing-input-wrap" hidden>
-          <textarea id="hearing-input" rows="3" maxlength="240" enterkeyhint="done"></textarea>
-          <button type="button" id="hearing-submit">答える</button>
-          <button type="button" id="hearing-skip" class="text-btn">いまは、言葉にしない</button>
-        </div>
-      </div>
-    </div>
+  function seed() {
+    return {
+      version: 1,
+      workspace: {
+        name: "David's workspace",
+        ownerId: SELF,
+        plan: "free",
+        activeProjectId: "prj-notes",
+        agentUsed: 42,
+        usagePeriod: "2026-11",
+        sample: true,
+        onboarded: false,
+        bannerDismissed: false
+      },
+      modelsConnected: { "claude-sonnet-4": true, "gpt-4o": true, "gemini-2-5-pro": true, "grok-4": true, "llama-3-70b": true },
+      users: [
+        { id: SELF, name: "David Chen", initial: "DC", bio: "40. Software engineer in Seattle. Works on a few projects after hours and on the commute. (Sample / demo data)", sample: true, isSelf: true },
+        { id: "u-maya", name: "Maya Flores", initial: "MF", bio: "32. Graphic designer. Building a short illustration series for her portfolio, outside of client work. (Sample)", sample: true },
+        { id: "u-nathan", name: "Nathan Brooks", initial: "NB", bio: "28. Independent maker. Prototyping a small inventory app, and keeping the misses on the record. (Sample)", sample: true },
+        { id: "u-ellen", name: "Ellen Park", initial: "EP", bio: "35. Writes a short note every Friday about what she noticed on the commute. (Sample)", sample: true }
+      ],
+      follows: [
+        { followerId: SELF, followeeId: "u-maya", at: "2026-10-20T21:00:00-07:00" },
+        { followerId: SELF, followeeId: "u-nathan", at: "2026-10-21T08:10:00-07:00" },
+        { followerId: "u-maya", followeeId: SELF, at: "2026-10-22T19:30:00-07:00" },
+        { followerId: "u-nathan", followeeId: SELF, at: "2026-10-25T12:00:00-07:00" },
+        { followerId: "u-ellen", followeeId: "u-maya", at: "2026-11-01T09:00:00-08:00" }
+      ],
+      projects: [
+        { id: "prj-notes", ownerId: SELF, name: "Weekly engineering notes", summary: "Take things learned during the week and write them up over the weekend.", status: "active", visibility: "public", startedAt: "2026-09-07T21:00:00-07:00", sample: true },
+        { id: "prj-ledger", ownerId: SELF, name: "Household monthly ledger", summary: "Import payroll and two card statements, and tally them by category each month.", status: "active", visibility: "private", startedAt: "2026-09-14T20:00:00-07:00", sample: true },
+        { id: "prj-shops", ownerId: SELF, name: "Notes from neighborhood shops", summary: "Walk the block on weekends and keep notes on the shops and conversations.", status: "paused", visibility: "followers", startedAt: "2026-10-04T11:00:00-07:00", sample: true },
+        { id: "prj-maya-series", ownerId: "u-maya", name: "Short series for my portfolio", summary: "Finish three short illustrations from older sketches, to a standard she would show.", status: "active", visibility: "public", startedAt: "2026-09-10T19:00:00-07:00", sample: true },
+        { id: "prj-maya-private", ownerId: "u-maya", name: "Client sketch shelf", summary: "Working sketches for commissions. Private.", status: "active", visibility: "private", startedAt: "2026-08-01T10:00:00-07:00", sample: true },
+        { id: "prj-nathan-app", ownerId: "u-nathan", name: "Inventory memo prototype", summary: "A small prototype so a shop can log stock in and out on the floor.", status: "active", visibility: "public", startedAt: "2026-08-20T20:00:00-07:00", sample: true },
+        { id: "prj-ellen-commute", ownerId: "u-ellen", name: "Friday commute notes", summary: "Every Friday, a short note about the week on the train.", status: "active", visibility: "public", startedAt: "2026-09-05T08:00:00-07:00", sample: true },
+        { id: "prj-ellen-fam", ownerId: "u-ellen", name: "Family weekly memo", summary: "A record meant only for people who follow her.", status: "active", visibility: "followers", startedAt: "2026-10-01T21:00:00-07:00", sample: true }
+      ],
+      branches: [
+        { id: "br-notes-1", projectId: "prj-notes", ownerId: SELF, at: "2026-09-22T21:15:00-07:00", fromPurpose: "Publish a short explainer video every week", toPurpose: "Publish a weekly engineering notes post", reason: "Shooting and editing took most of the weekend. That pace would not hold.", visibility: "public", sample: true },
+        { id: "br-nathan-1", projectId: "prj-nathan-app", ownerId: "u-nathan", at: "2026-09-30T22:00:00-07:00", fromPurpose: "Ship a general-purpose inventory product", toPurpose: "First, a prototype that works for one shop I know", reason: "The floor process still had gaps. Widening the audience could wait.", visibility: "public", sample: true }
+      ],
+      activities: [
+        { id: "act-b1", projectId: "prj-notes", ownerId: SELF, at: "2026-09-07T21:00:00-07:00", what: "Opened the project. The aim was a five-minute explainer video every Sunday night.", movedTo: "A provisional plan", source: "user", visibility: "public", sample: true },
+        { id: "act-b2", projectId: "prj-notes", ownerId: SELF, at: "2026-09-14T22:30:00-07:00", what: "Pulled ten topic ideas out of older internal notes. Decided to film the first one at home.", movedTo: "Topics and a place to shoot", source: "user", visibility: "public", sample: true },
+        { id: "act-b3", projectId: "prj-notes", ownerId: SELF, at: "2026-09-21T16:00:00-07:00", what: "Shot and edited the first video. Editing took most of the afternoon.", movedTo: "Clear that this pace will not hold", source: "user", visibility: "public", sample: true },
+        { id: "act-b4", projectId: "prj-notes", ownerId: SELF, at: "2026-09-22T21:15:00-07:00", what: "Changed the aim to a weekly written post. Re-read older notes for topics that can actually be published.", movedTo: "Writing, not video", source: "user", branchId: "br-notes-1", visibility: "public", sample: true, assetId: "ast-b-memo1" },
+        { id: "act-b5", projectId: "prj-notes", ownerId: SELF, at: "2026-09-28T12:20:00-07:00", what: "Over lunch, narrowed the list to five, and titled the first piece “What broke in our log design.”", movedTo: "Topic chosen", source: "user", visibility: "public", sample: true, assetId: "ast-b-list" },
+        { id: "act-b6", projectId: "prj-notes", ownerId: SELF, at: "2026-10-05T22:40:00-07:00", what: "Wrote the first draft on the commute and in the evening. The outline is still rough.", movedTo: "Draft complete", source: "user", visibility: "public", sample: true, assetId: "ast-b-draft" },
+        { id: "act-b7", projectId: "prj-notes", ownerId: SELF, at: "2026-10-12T07:10:00-07:00", what: "An agent I had asked overnight had left a revised outline. I took the headings I agreed with and edited the draft.", movedTo: "Outline revised; ready to polish", source: "agent", model: "claude-sonnet-4", agentId: "ag-1", visibility: "public", sample: true, assetId: "ast-b-outline", whileAway: true },
+        { id: "act-b8", projectId: "prj-notes", ownerId: SELF, at: "2026-10-19T21:00:00-07:00", what: "Published the first post and recorded the URL and time.", movedTo: "Live. Next: choose the second topic", source: "user", visibility: "public", sample: true, verified: true },
+        { id: "act-b9", projectId: "prj-notes", ownerId: SELF, at: "2026-11-02T21:30:00-07:00", what: "Started a draft of the second piece, “Sorting review comments.”", movedTo: "Writing", source: "user", visibility: "followers", sample: true },
+        { id: "act-b10", projectId: "prj-notes", ownerId: SELF, at: "2026-11-10T20:15:00-07:00", what: "Reconciled post-publish traffic and drop-off against the server logs.", movedTo: "Verification complete", source: "user", visibility: "public", sample: true, assetId: "ast-b-verify", verified: true },
+        { id: "act-b11", projectId: "prj-notes", ownerId: SELF, at: "2026-11-11T07:05:00-08:00", what: "Overnight, an agent finished a language pass on the second draft. I picked up the list of notes.", movedTo: "Edits waiting", source: "agent", model: "gemini-2-5-pro", agentId: "ag-3", visibility: "followers", sample: true, whileAway: true, assetId: "ast-b-review" },
+        { id: "act-h1", projectId: "prj-ledger", ownerId: SELF, at: "2026-09-14T20:00:00-07:00", what: "Set the scope to payroll and two cards. Made a first list of categories.", movedTo: "A provisional brief", source: "user", visibility: "private", sample: true },
+        { id: "act-h2", projectId: "prj-ledger", ownerId: SELF, at: "2026-09-27T21:00:00-07:00", what: "Settled the columns (date, amount, category, note) and typed in a month by hand.", movedTo: "A working template", source: "user", visibility: "private", sample: true, assetId: "ast-h-sheet" },
+        { id: "act-h3", projectId: "prj-ledger", ownerId: SELF, at: "2026-10-11T09:30:00-07:00", what: "Imported a card CSV and checked the column mapping. An agent had already proposed a mapping.", movedTo: "Import path settled", source: "agent", model: "gpt-4o", agentId: "ag-2", visibility: "private", sample: true, assetId: "ast-h-map", whileAway: true },
+        { id: "act-h4", projectId: "prj-ledger", ownerId: SELF, at: "2026-10-26T21:00:00-07:00", what: "Ran September and October automatically and checked them against a hand total. No difference.", movedTo: "Verified", source: "user", visibility: "private", sample: true, assetId: "ast-h-verify", verified: true },
+        { id: "act-h5", projectId: "prj-ledger", ownerId: SELF, at: "2026-11-08T08:10:00-08:00", what: "Imported November and tried automatic categories. Three rows came back unknown.", movedTo: "Rules need another look", source: "user", visibility: "private", sample: true, assetId: "ast-h-csv" },
+        { id: "act-s1", projectId: "prj-shops", ownerId: SELF, at: "2026-10-04T11:00:00-07:00", what: "Walked the block east to west and noted 16 shops that were open.", movedTo: "First pass on the record", source: "user", visibility: "followers", sample: true, assetId: "ast-s-memo1" },
+        { id: "act-s2", projectId: "prj-shops", ownerId: SELF, at: "2026-10-18T15:20:00-07:00", what: "Talked with the stationer and the bakery. Kept hours and a few lines from the conversation.", movedTo: "Two conversations", source: "user", visibility: "followers", sample: true, assetId: "ast-s-talk" },
+        { id: "act-s3", projectId: "prj-shops", ownerId: SELF, at: "2026-11-01T14:00:00-07:00", what: "Reread the earlier notes and put a temporary tag on each shop. The next visit is on hold.", movedTo: "Sorted, then paused", source: "user", visibility: "followers", sample: true },
+        { id: "act-m1", projectId: "prj-maya-series", ownerId: "u-maya", at: "2026-09-10T19:00:00-07:00", what: "Went back through twenty older sketches and kept six that could stand to be shown.", movedTo: "First cut", source: "user", visibility: "public", sample: true },
+        { id: "act-m2", projectId: "prj-maya-series", ownerId: "u-maya", at: "2026-10-02T21:40:00-07:00", what: "Cut the six to three, and finished the line work on the first. Color is still temporary.", movedTo: "Line work on piece one", source: "user", visibility: "public", sample: true, assetId: "ast-m-line" },
+        { id: "act-m3", projectId: "prj-maya-series", ownerId: "u-maya", at: "2026-10-26T18:00:00-07:00", what: "Put color on the first piece and matched resolution and margins to the portfolio.", movedTo: "Finished piece one", source: "user", visibility: "public", sample: true, assetId: "ast-m-done" },
+        { id: "act-m4", projectId: "prj-maya-series", ownerId: "u-maya", at: "2026-11-08T16:20:00-08:00", what: "Redrew the composition on piece two and moved the figure to the left.", movedTo: "Composition revised", source: "user", visibility: "public", sample: true },
+        { id: "act-mp1", projectId: "prj-maya-private", ownerId: "u-maya", at: "2026-09-01T11:00:00-07:00", what: "Shelved a commission sketch here.", movedTo: "Opened as a private shelf", source: "user", visibility: "private", sample: true },
+        { id: "act-k1", projectId: "prj-nathan-app", ownerId: "u-nathan", at: "2026-08-20T20:00:00-07:00", what: "Listed screens for a general inventory product. Had not chosen a trade yet.", movedTo: "A wide brief", source: "user", visibility: "public", sample: true },
+        { id: "act-k2", projectId: "prj-nathan-app", ownerId: "u-nathan", at: "2026-09-12T21:00:00-07:00", what: "Had a friend try the first prototype in their shop. They said there were too many fields.", movedTo: "Notes from the floor", source: "user", visibility: "public", sample: true, assetId: "ast-k-fb", verified: true },
+        { id: "act-k3", projectId: "prj-nathan-app", ownerId: "u-nathan", at: "2026-09-30T22:00:00-07:00", what: "Narrowed the aim to a prototype for one shop. Cut the screens to inbound, outbound, and stock.", movedTo: "Scope is one shop", source: "user", branchId: "br-nathan-1", visibility: "public", sample: true },
+        { id: "act-k4", projectId: "prj-nathan-app", ownerId: "u-nathan", at: "2026-10-20T23:10:00-07:00", what: "Built the three-screen prototype. Short name entry instead of a barcode.", movedTo: "Second prototype", source: "user", visibility: "public", sample: true, assetId: "ast-k-proto" },
+        { id: "act-k5", projectId: "prj-nathan-app", ownerId: "u-nathan", at: "2026-11-06T21:00:00-07:00", what: "Tried the second prototype in the same shop. Entry time was shorter than last time — noted as such.", movedTo: "A second trial on the record", source: "user", visibility: "public", sample: true, verified: true },
+        { id: "act-y1", projectId: "prj-ellen-commute", ownerId: "u-ellen", at: "2026-09-05T08:20:00-07:00", what: "On a Friday commute, photographed a new bus-stop display and wrote a short note.", movedTo: "First note", source: "user", visibility: "public", sample: true },
+        { id: "act-y2", projectId: "prj-ellen-commute", ownerId: "u-ellen", at: "2026-10-10T08:15:00-07:00", what: "Compiled three delay notes from a bad week into a table of how far off the times ran.", movedTo: "Delay record", source: "user", visibility: "public", sample: true, assetId: "ast-y-delay", verified: true },
+        { id: "act-y3", projectId: "prj-ellen-commute", ownerId: "u-ellen", at: "2026-11-07T08:30:00-08:00", what: "Noted the winter timetable change and how many minutes arrival moved.", movedTo: "Timetable change on the record", source: "user", visibility: "public", sample: true },
+        { id: "act-yf1", projectId: "prj-ellen-fam", ownerId: "u-ellen", at: "2026-10-12T21:00:00-07:00", what: "Left a note about this week's plans, for followers only.", movedTo: "A followers-only record", source: "user", visibility: "followers", sample: true }
+      ],
+      assets: [
+        { id: "ast-b-draft", projectId: "prj-notes", ownerId: SELF, name: "Draft: “What broke in our log design”", type: "Deliverable", provenance: "Written by David Chen on Oct 5, 2026. Outline revised Oct 12. Published Oct 19.", verified: true, visibility: "public", createdAt: "2026-10-05T22:40:00-07:00", sample: true, note: "Published essay." },
+        { id: "ast-b-outline", projectId: "prj-notes", ownerId: SELF, name: "Outline for the first post", type: "Deliverable", provenance: "Agent (Claude Sonnet 4) produced this in the early hours of Oct 12, 2026, at David Chen's request.", verified: false, visibility: "public", createdAt: "2026-10-12T05:40:00-07:00", sample: true, model: "claude-sonnet-4" },
+        { id: "ast-b-list", projectId: "prj-notes", ownerId: SELF, name: "Five-topic shortlist", type: "Note", provenance: "Registered by David Chen from the Sep 28, 2026 activity.", verified: false, visibility: "public", createdAt: "2026-09-28T12:20:00-07:00", sample: true },
+        { id: "ast-b-verify", projectId: "prj-notes", ownerId: SELF, name: "Post-publish traffic reconciliation", type: "Verification", provenance: "David Chen reconciled the published page against server logs on Nov 10, 2026.", verified: true, visibility: "public", createdAt: "2026-11-10T20:15:00-07:00", sample: true },
+        { id: "ast-b-tool", projectId: "prj-notes", ownerId: SELF, name: "Static site generator used", type: "Tool", provenance: "Recorded by David Chen on Oct 18, 2026.", verified: false, visibility: "public", createdAt: "2026-10-18T21:00:00-07:00", sample: true },
+        { id: "ast-b-memo1", projectId: "prj-notes", ownerId: SELF, name: "Note on changing purpose", type: "Note", provenance: "Registered by David Chen from the Sep 22, 2026 activity.", verified: false, visibility: "public", createdAt: "2026-09-22T21:15:00-07:00", sample: true },
+        { id: "ast-b-review", projectId: "prj-notes", ownerId: SELF, name: "Language notes on the second draft", type: "Deliverable", provenance: "Agent (Gemini 2.5 Pro) produced this in the early hours of Nov 11, 2026, at David Chen's request.", verified: false, visibility: "followers", createdAt: "2026-11-11T06:50:00-08:00", sample: true, model: "gemini-2-5-pro" },
+        { id: "ast-h-sheet", projectId: "prj-ledger", ownerId: SELF, name: "Ledger template", type: "Deliverable", provenance: "Created by David Chen on Sep 27, 2026.", verified: false, visibility: "private", createdAt: "2026-09-27T21:00:00-07:00", sample: true },
+        { id: "ast-h-map", projectId: "prj-ledger", ownerId: SELF, name: "Card CSV column mapping", type: "Deliverable", provenance: "Agent (GPT-4o) produced this on Oct 11, 2026, at David Chen's request.", verified: false, visibility: "private", createdAt: "2026-10-11T07:20:00-07:00", sample: true, model: "gpt-4o" },
+        { id: "ast-h-verify", projectId: "prj-ledger", ownerId: SELF, name: "Sep–Oct totals check", type: "Verification", provenance: "David Chen checked against a hand total on Oct 26, 2026. No difference.", verified: true, visibility: "private", createdAt: "2026-10-26T21:00:00-07:00", sample: true },
+        { id: "ast-h-csv", projectId: "prj-ledger", ownerId: SELF, name: "Card CSVs, Sep–Nov 2026", type: "Data", provenance: "Imported by David Chen from the card issuer and recorded Nov 8, 2026.", verified: true, visibility: "private", createdAt: "2026-11-08T08:10:00-08:00", sample: true },
+        { id: "ast-s-memo1", projectId: "prj-shops", ownerId: SELF, name: "First walk notes (16 shops)", type: "Note", provenance: "Registered by David Chen from the Oct 4, 2026 activity.", verified: false, visibility: "followers", createdAt: "2026-10-04T11:00:00-07:00", sample: true },
+        { id: "ast-s-talk", projectId: "prj-shops", ownerId: SELF, name: "Stationer and bakery conversations", type: "Data", provenance: "Recorded by David Chen on Oct 18, 2026.", verified: false, visibility: "followers", createdAt: "2026-10-18T15:20:00-07:00", sample: true },
+        { id: "ast-s-tool", projectId: "prj-shops", ownerId: SELF, name: "Transcription tool used", type: "Tool", provenance: "Recorded by David Chen on Oct 18, 2026.", verified: false, visibility: "followers", createdAt: "2026-10-18T16:00:00-07:00", sample: true },
+        { id: "ast-m-line", projectId: "prj-maya-series", ownerId: "u-maya", name: "Line work, piece one", type: "Deliverable", provenance: "Created by Maya Flores on Oct 2, 2026. (Sample)", verified: false, visibility: "public", createdAt: "2026-10-02T21:40:00-07:00", sample: true },
+        { id: "ast-m-done", projectId: "prj-maya-series", ownerId: "u-maya", name: "Finished piece one", type: "Deliverable", provenance: "Created by Maya Flores on Oct 26, 2026. (Sample)", verified: false, visibility: "public", createdAt: "2026-10-26T18:00:00-07:00", sample: true },
+        { id: "ast-k-fb", projectId: "prj-nathan-app", ownerId: "u-nathan", name: "Notes from the first shop trial", type: "Verification", provenance: "Recorded by Nathan Brooks on Sep 12, 2026 from a trial in a friend's shop. (Sample)", verified: true, visibility: "public", createdAt: "2026-09-12T21:00:00-07:00", sample: true },
+        { id: "ast-k-proto", projectId: "prj-nathan-app", ownerId: "u-nathan", name: "Second prototype (three screens)", type: "Deliverable", provenance: "Created by Nathan Brooks on Oct 20, 2026. (Sample)", verified: false, visibility: "public", createdAt: "2026-10-20T23:10:00-07:00", sample: true },
+        { id: "ast-y-delay", projectId: "prj-ellen-commute", ownerId: "u-ellen", name: "Delay table", type: "Data", provenance: "Recorded by Ellen Park on Oct 10, 2026. Checked against the published timetable. (Sample)", verified: true, visibility: "public", createdAt: "2026-10-10T08:15:00-07:00", sample: true }
+      ],
+      listings: [
+        { id: "lst-1", assetId: "ast-k-proto", price: 80, currency: "USD", note: "The three-screen prototype, with the notes from the second shop trial attached.", listedAt: "2026-11-07T10:00:00-08:00", sample: true },
+        { id: "lst-2", assetId: "ast-k-fb", price: 25, currency: "USD", note: "Floor notes from the first trial — what's too heavy to enter on a counter.", listedAt: "2026-10-01T09:00:00-07:00", sample: true },
+        { id: "lst-3", assetId: "ast-m-done", price: 140, currency: "USD", note: "Finished first piece, portfolio margins already applied. Non-exclusive.", listedAt: "2026-10-28T12:00:00-07:00", sample: true },
+        { id: "lst-4", assetId: "ast-b-outline", price: 15, currency: "USD", note: "The outline an agent produced for the first post, with David's later edits implied in the provenance.", listedAt: "2026-10-20T08:00:00-07:00", sample: true },
+        { id: "lst-5", assetId: "ast-y-delay", price: 10, currency: "USD", note: "A small delay table, already checked against the published timetable.", listedAt: "2026-10-12T11:00:00-07:00", sample: true }
+      ],
+      agents: [
+        { id: "ag-1", projectId: "prj-notes", title: "Revise the first-post outline", model: "claude-sonnet-4", status: "completed", request: "Reorder the headings so a reader does not get lost. Flag any paragraph I can cut.", result: "(Simulated demo output — no model was called.) Reorder headings as problem → what I tried → the judgment that remained. Collapse the overlapping explanation in the first half into one place.", requestedAt: "2026-10-11T22:30:00-07:00", startedAt: "2026-10-11T22:31:00-07:00", completedAt: "2026-10-12T05:40:00-07:00", whileAway: true, autoProgress: false, sample: true },
+        { id: "ag-2", projectId: "prj-ledger", title: "Map the card CSV columns", model: "gpt-4o", status: "completed", request: "Two issuers name columns differently. Propose a mapping onto date, amount, category, and note.", result: "(Simulated demo output — no model was called.) Issuer A: date / amount / memo. Issuer B: transacted / USD / merchant. Category inferred from merchant; leave unknown blank.", requestedAt: "2026-10-10T23:00:00-07:00", startedAt: "2026-10-10T23:01:00-07:00", completedAt: "2026-10-11T07:20:00-07:00", whileAway: true, autoProgress: false, sample: true },
+        { id: "ag-3", projectId: "prj-notes", title: "Language pass on the second draft", model: "gemini-2-5-pro", status: "completed", request: "Flag anything that's hard to follow, and anywhere the claim is stronger than the evidence.", result: "(Simulated demo output — no model was called.) Three subject shifts and two over-certain claims, each with a milder alternative.", requestedAt: "2026-11-10T23:10:00-08:00", startedAt: "2026-11-10T23:11:00-08:00", completedAt: "2026-11-11T06:50:00-08:00", whileAway: true, autoProgress: false, sample: true },
+        { id: "ag-4", projectId: "prj-ledger", title: "Category rules for three unknowns", model: "grok-4", status: "running", request: "For the three November rows with no category, propose rules from earlier statements.", result: "", requestedAt: "2026-11-12T20:40:00-08:00", startedAt: "2026-11-12T20:41:00-08:00", completedAt: null, whileAway: true, autoProgress: false, sample: true },
+        { id: "ag-5", projectId: "prj-shops", title: "Tag the conversation notes", model: "llama-3-70b", status: "queued", request: "Suggest shop, topic, and date tags for the stationer and bakery notes.", result: "", requestedAt: "2026-11-12T22:30:00-08:00", startedAt: null, completedAt: null, whileAway: false, autoProgress: false, sample: true },
+        { id: "ag-6", projectId: "prj-notes", title: "Title and deck for the published page", model: "llama-3-70b", status: "completed", request: "Give me three title and description options for the first published page.", result: "(Simulated demo output — no model was called.) Three titles and a ~120-character description each.", requestedAt: "2026-10-18T18:00:00-07:00", startedAt: "2026-10-18T18:01:00-07:00", completedAt: "2026-10-18T18:20:00-07:00", whileAway: false, autoProgress: false, sample: true }
+      ],
+      likes: [
+        { id: "lk-1", activityId: "act-b8", userId: "u-nathan", at: "2026-10-20T08:00:00-07:00", sample: true },
+        { id: "lk-2", activityId: "act-b8", userId: "u-maya", at: "2026-10-20T12:10:00-07:00", sample: true },
+        { id: "lk-3", activityId: "act-b10", userId: "u-nathan", at: "2026-11-11T09:00:00-08:00", sample: true },
+        { id: "lk-4", activityId: "act-m3", userId: SELF, at: "2026-10-27T07:30:00-07:00" },
+        { id: "lk-5", activityId: "act-k5", userId: SELF, at: "2026-11-07T08:00:00-08:00" },
+        { id: "lk-6", activityId: "act-k3", userId: "u-maya", at: "2026-10-01T10:00:00-07:00", sample: true },
+        { id: "lk-7", activityId: "act-y3", userId: "u-maya", at: "2026-11-07T12:00:00-08:00", sample: true }
+      ],
+      comments: [
+        { id: "cm-1", activityId: "act-b8", userId: "u-maya", body: "The way you kept the record up to publish is easy to come back to. The note from the day you changed direction is especially useful.", at: "2026-10-20T12:15:00-07:00", sample: true },
+        { id: "cm-2", activityId: "act-b8", userId: SELF, body: "Thanks. I mainly wanted the decision — video to writing — to be on the record first.", at: "2026-10-20T21:00:00-07:00" },
+        { id: "cm-3", activityId: "act-k3", userId: SELF, body: "Narrowing to one shop makes the later prototypes much easier to read.", at: "2026-10-02T08:20:00-07:00" },
+        { id: "cm-4", activityId: "act-m3", userId: "u-ellen", body: "The margin treatment is something I want to borrow for my own notes.", at: "2026-10-27T09:00:00-07:00", sample: true },
+        { id: "cm-5", activityId: "act-b10", userId: "u-nathan", body: "Reconciling against the logs is something I'll want to come back to.", at: "2026-11-11T09:05:00-08:00", sample: true }
+      ],
+      notifications: [
+        { id: "nt-1", type: "follow", at: "2026-10-22T19:30:00-07:00", fromUserId: "u-maya", read: true, text: "Maya Flores followed you." },
+        { id: "nt-2", type: "like", at: "2026-10-20T12:10:00-07:00", fromUserId: "u-maya", activityId: "act-b8", read: true, text: "Maya Flores liked your activity." },
+        { id: "nt-3", type: "comment", at: "2026-10-20T12:15:00-07:00", fromUserId: "u-maya", activityId: "act-b8", read: true, text: "Maya Flores commented on your activity." },
+        { id: "nt-4", type: "like", at: "2026-11-11T09:00:00-08:00", fromUserId: "u-nathan", activityId: "act-b10", read: false, text: "Nathan Brooks liked your activity." },
+        { id: "nt-5", type: "comment", at: "2026-11-11T09:05:00-08:00", fromUserId: "u-nathan", activityId: "act-b10", read: false, text: "Nathan Brooks commented on your activity." },
+        { id: "nt-6", type: "agent_complete", at: "2026-11-11T06:50:00-08:00", agentId: "ag-3", read: false, text: "Agent “Language pass on the second draft” (Gemini 2.5 Pro) finished. It ran while you were away." },
+        { id: "nt-7", type: "follow", at: "2026-10-25T12:00:00-07:00", fromUserId: "u-nathan", read: true, text: "Nathan Brooks followed you." }
+      ],
+      sim: { reactionsScheduled: 0, lastAt: null }
+    };
+  }
 
-    <div id="cinematic" class="overlay" hidden>
-      <div id="cinematic-body" class="cinematic-body"></div>
-    </div>
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return seed();
+      var d = JSON.parse(raw);
+      if (!d || d.version !== 1 || !d.workspace) return seed();
+      return d;
+    } catch (e) { return seed(); }
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
 
-    <div id="proto" class="overlay proto-overlay" hidden>
-      <div class="proto-panel">
-        <h2>試作のためのスイッチ</h2>
-        <p class="proto-note">ここにあるものは、製品として未決定です。試作で動かすためだけの仮の操作です。ここで選んだことを、決定済みとしては扱いません。</p>
+  function getTheme() {
+    try {
+      var t = localStorage.getItem(THEME_KEY);
+      if (t === "light" || t === "dark") return t;
+    } catch (e) {}
+    return "dark";
+  }
+  function applyTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+  }
+  function toggleTheme() {
+    applyTheme(getTheme() === "dark" ? "light" : "dark");
+    render();
+  }
 
-        <section>
-          <h3>マップの起こし方 <span class="tag">未決定</span></h3>
-          <p class="proto-note">個人が開くのか、運営が場として開くのかは未決定です。</p>
-          <div class="seg" id="proto-map-auth">
-            <button type="button" data-value="undecided">未設定</button>
-            <button type="button" data-value="individual">個人が開く</button>
-            <button type="button" data-value="operated">運営が開く</button>
-          </div>
-        </section>
+  function userBy(id) { return (state.users || []).filter(function (u) { return u.id === id; })[0] || { id: id, name: "Unknown", initial: "?", sample: true }; }
+  function projectBy(id) { return (state.projects || []).filter(function (p) { return p.id === id; })[0]; }
+  function activityBy(id) { return (state.activities || []).filter(function (a) { return a.id === id; })[0]; }
+  function assetBy(id) { return (state.assets || []).filter(function (a) { return a.id === id; })[0]; }
+  function listingBy(id) { return (state.listings || []).filter(function (a) { return a.id === id; })[0]; }
+  function modelBy(id) { return MODELS.filter(function (m) { return m.id === id; })[0]; }
+  function modelName(id) { var m = modelBy(id); return m ? m.name : (id || ""); }
+  function visRank(v) { return v === "private" ? 0 : v === "followers" ? 1 : 2; }
+  function effectiveVis(project, activity) {
+    var pv = (project && project.visibility) || "private";
+    var av = (activity && activity.visibility) || pv;
+    return visRank(av) < visRank(pv) ? av : pv;
+  }
+  function isFollowing(followerId, followeeId) {
+    return (state.follows || []).some(function (f) { return f.followerId === followerId && f.followeeId === followeeId; });
+  }
+  function canViewVis(ownerId, vis, viewerId) {
+    viewerId = viewerId || SELF;
+    if (ownerId === viewerId) return true;
+    if (vis === "public") return true;
+    if (vis === "followers") return isFollowing(viewerId, ownerId);
+    return false;
+  }
+  function canViewActivity(act) { return canViewVis(act.ownerId, effectiveVis(projectBy(act.projectId), act), SELF); }
+  function canViewProject(p) { return canViewVis(p.ownerId, p.visibility || "private", SELF); }
+  function ownProjects() { return state.projects.filter(function (p) { return p.ownerId === SELF; }); }
+  function followersOf(id) { return state.follows.filter(function (f) { return f.followeeId === id; }); }
+  function followingOf(id) { return state.follows.filter(function (f) { return f.followerId === id; }); }
+  function likesOf(actId) { return state.likes.filter(function (l) { return l.activityId === actId; }); }
+  function commentsOf(actId) {
+    return state.comments.filter(function (c) { return c.activityId === actId; }).sort(function (a, b) { return new Date(a.at) - new Date(b.at); });
+  }
+  function likedByMe(actId) { return state.likes.some(function (l) { return l.activityId === actId && l.userId === SELF; }); }
+  function unreadCount() { return state.notifications.filter(function (n) { return !n.read; }).length; }
+  function planLimit() { return LIMITS[state.workspace.plan] || LIMITS.free; }
+  function selfActivities(projectId) {
+    return state.activities.filter(function (a) { return a.ownerId === SELF && (!projectId || a.projectId === projectId); })
+      .sort(function (a, b) { return new Date(b.at) - new Date(a.at); });
+  }
+  function projectActivities(projectId) {
+    return state.activities.filter(function (a) { return a.projectId === projectId && canViewActivity(a); })
+      .sort(function (a, b) { return new Date(b.at) - new Date(a.at); });
+  }
+  function projectBranches(projectId) {
+    return state.branches.filter(function (b) { return b.projectId === projectId; })
+      .sort(function (a, b) { return new Date(b.at) - new Date(a.at); });
+  }
+  function statusLabel(s) { return s === "active" ? "In progress" : s === "paused" ? "Paused" : s === "archived" ? "Archived" : s; }
+  function agentStatusLabel(s) { return s === "running" ? "Running" : s === "queued" || s === "waiting" ? "Queued" : s === "completed" ? "Done" : s; }
+  function visLabel(v) { return VIS[v] || v; }
+  function addNotification(n) { n.id = n.id || uid("nt"); n.at = n.at || nowISO(); n.read = !!n.read; state.notifications.unshift(n); }
+  function route() {
+    var raw = (location.hash || "#/home").replace(/^#/, "");
+    var parts = raw.split("/").filter(Boolean);
+    var name = parts[0] || "home";
+    if (name === "dashboard") name = "home";
+    if (name === "assets") name = "library";
+    if (name === "pricing") name = "billing";
+    return { name: name, id: parts[1] || "", extra: parts[2] || "" };
+  }
+  function navTo(hash) {
+    if (location.hash === hash) render();
+    else location.hash = hash;
+  }
+  function toast(msg) {
+    ui.toast = msg;
+    if (ui.toastTimer) clearTimeout(ui.toastTimer);
+    ui.toastTimer = setTimeout(function () {
+      ui.toast = null;
+      var el = document.querySelector(".toast");
+      if (el) el.remove();
+    }, 2800);
+    var old = document.querySelector(".toast");
+    if (old) old.remove();
+    var t = document.createElement("div");
+    t.className = "toast";
+    t.setAttribute("role", "status");
+    t.textContent = msg;
+    document.body.appendChild(t);
+  }
 
-        <section>
-          <h3>夜を越える <span class="tag">試作操作</span></h3>
-          <p class="proto-note">いないあいだに衛星が働く様子を見るための、時間の送りです。</p>
-          <button type="button" id="proto-skip-time" class="proto-action">夜を越える</button>
-        </section>
+  function icon(name) {
+    var p = 'width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+    var map = {
+      home: '<path d="M4 11.5 12 4l8 7.5"/><path d="M6 10.5V20h12v-9.5"/>',
+      feed: '<path d="M5 6h14M5 12h14M5 18h9"/>',
+      folder: '<path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+      bot: '<rect x="5" y="8" width="14" height="10" rx="3"/><path d="M12 8V5M9 13h.01M15 13h.01M8 20h8"/>',
+      box: '<path d="M12 3 21 8v8l-9 5-9-5V8z"/><path d="M12 13 21 8M12 13 3 8M12 13v10"/>',
+      map: '<path d="M9 4 3 6.5v13L9 17M9 4l6 2.5M9 4v13m6-10.5L21 4v13.5L15 20M15 6.5V20"/>',
+      bag: '<path d="M6 8h12l1 12H5L6 8z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/>',
+      yen: '<path d="M4 10h16M4 14h16M6 6l6 12L18 6"/>',
+      gear: '<circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M5 5l1.5 1.5M17.5 17.5 19 19M3 12h2M19 12h2M5 19l1.5-1.5M17.5 6.5 19 5"/>',
+      bell: '<path d="M6 16V11a6 6 0 1 1 12 0v5l1 2H5z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+      menu: '<path d="M5 7h14M5 12h14M5 17h14"/>',
+      plus: '<path d="M12 5v14M5 12h14"/>',
+      close: '<path d="M6 6l12 12M18 6 6 18"/>',
+      heart: '<path d="M12 19S5 14 5 9.5A3.5 3.5 0 0 1 12 8a3.5 3.5 0 0 1 7 1.5C19 14 12 19 12 19z"/>',
+      chat: '<path d="M5 6h14v10H8l-3 3z"/>',
+      lock: '<rect x="6" y="11" width="12" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+      users: '<circle cx="9" cy="8" r="3"/><circle cx="16" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c1.8-.6 4-1 5-3.5"/>',
+      globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>',
+      search: '<circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/>',
+      sun: '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 5l1.5 1.5M17.5 17.5 19 19M3 12h2M19 12h2M5 19l1.5-1.5M17.5 6.5 19 5"/>',
+      moon: '<path d="M18 13a7 7 0 1 1-7-9 6 6 0 0 0 7 9z"/>',
+      kbd: '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M12 10h.01M17 10h.01M8 14h8"/>'
+    };
+    return "<svg " + p + ">" + (map[name] || "") + "</svg>";
+  }
+  function avHtml(user, size) {
+    var u = typeof user === "string" ? userBy(user) : user;
+    var col = AV[u.id] || "#444";
+    return '<span class="av ' + (size || "") + '" style="background:' + col + '" aria-hidden="true">' + esc(u.initial || (u.name || "?").slice(0, 2)) + "</span>";
+  }
+  function sampleTag(obj) { return (obj && obj.sample) ? '<span class="pill sample">Sample</span>' : ""; }
+  function visPill(v) {
+    var ic = v === "private" ? "lock" : v === "followers" ? "users" : "globe";
+    return '<span class="pill muted">' + icon(ic) + " " + esc(visLabel(v)) + "</span>";
+  }
+  function modelPill(mid) {
+    var m = modelBy(mid);
+    if (!m) return mid ? '<span class="pill">' + esc(mid) + "</span>" : "";
+    return '<span class="pill"><i class="model-dot" style="background:' + m.color + '"></i>' + esc(m.name) + "</span>";
+  }
+  function verifiedPill(v) { return v ? '<span class="pill ok">Verified</span>' : '<span class="pill muted">Self-reported</span>'; }
 
-        <section>
-          <h3>記録</h3>
-          <button type="button" id="proto-reset" class="proto-action danger">記録を消して、はじめから</button>
-        </section>
+  function isActiveNav(r, key) {
+    if (key === "home") return r.name === "home";
+    return r.name === key;
+  }
+  function sidebarHtml(r) {
+    var item = function (href, key, ic, label) {
+      return '<a href="' + href + '" class="' + (isActiveNav(r, key) ? "active" : "") + '" data-nav="' + key + '">' + icon(ic) + "<span>" + label + "</span></a>";
+    };
+    var me = userBy(SELF);
+    var n = unreadCount();
+    return '<aside class="sidebar' + (ui.menuOpen ? " open" : "") + '" id="sidebar" data-testid="sidebar">' +
+      '<div class="brand">RayLee<span class="dot">.</span></div>' +
+      '<div class="tagline">The workspace your agents inherit.</div>' +
+      '<button class="sb-cmd" data-action="open-cmd" data-testid="btn-cmd" type="button">' + icon("search") + "<span>Jump or search…</span><kbd>⌘K</kbd></button>" +
+      '<nav class="nav">' +
+        item("#/home", "home", "home", "Home") +
+        item("#/feed", "feed", "feed", "Feed") +
+        item("#/projects", "projects", "folder", "Projects") +
+        item("#/agents", "agents", "bot", "Agents") +
+        item("#/library", "library", "box", "Library") +
+        item("#/map", "map", "map", "Map") +
+        item("#/market", "market", "bag", "Marketplace") +
+        '<div class="nav-sec">Account</div>' +
+        item("#/billing", "billing", "yen", "Billing") +
+        item("#/settings", "settings", "gear", "Settings") +
+      "</nav>" +
+      '<div class="sb-foot"><a class="sb-user" href="#/profile/' + SELF + '" data-testid="sidebar-profile">' +
+        avHtml(me) +
+        "<div><div>" + esc(me.name) + '</div><div class="meta">Sample · ' + esc(state.workspace.name) + "</div></div>" +
+      "</a></div></aside>";
+  }
 
-        <button type="button" id="proto-close" class="text-btn">閉じる</button>
-      </div>
-    </div>
-  </div>
-  <script type="module" src="js/main.js"></script>
+  function topbarHtml(r, title, crumb) {
+    var n = unreadCount();
+    var me = userBy(SELF);
+    var theme = getTheme();
+    return '<header class="topbar"><button class="icon-btn menu-btn" data-action="toggle-menu" aria-label="Menu">' + icon("menu") + "</button>" +
+      "<h1>" + (crumb ? '<span class="crumb">' + crumb + " / </span>" : "") + title + "</h1>" +
+      '<button class="icon-btn" data-action="open-cmd" aria-label="Command palette" title="Command palette">' + icon("search") + "</button>" +
+      '<button class="icon-btn" data-action="toggle-theme" aria-label="Toggle theme" data-testid="btn-theme" title="Toggle theme">' + icon(theme === "dark" ? "sun" : "moon") + "</button>" +
+      '<button class="icon-btn hide-sm" data-action="open-shortcuts" aria-label="Keyboard shortcuts" title="Shortcuts">' + icon("kbd") + "</button>" +
+      '<div class="notif-wrap">' +
+        '<button class="icon-btn" data-action="toggle-notif" aria-label="Notifications" data-testid="btn-notif">' + icon("bell") +
+        (n ? '<span class="dot"></span>' : "") + "</button>" +
+        (ui.notifOpen ? notifPanelHtml() : "") +
+      "</div>" +
+      '<a href="#/profile/' + SELF + '" title="Profile">' + avHtml(me, "sm") + "</a></header>";
+  }
+  function notifPanelHtml() {
+    var list = state.notifications.slice().sort(function (a, b) { return new Date(b.at) - new Date(a.at); });
+    var body = list.length ? list.map(function (n) {
+      var href = n.type === "follow" && n.fromUserId ? "#/profile/" + n.fromUserId : n.type === "agent_complete" ? "#/agents" : "#/feed";
+      return '<a class="notif' + (n.read ? "" : " unread") + '" href="' + href + '" data-action="read-notif" data-id="' + esc(n.id) + '">' +
+        (n.fromUserId ? avHtml(n.fromUserId, "sm") : '<span class="av sm" style="background:#1A5F9E">A</span>') +
+        "<div><div>" + esc(n.text) + '</div><div class="n-time">' + fmtRel(n.at) + " · " + notifTypeLabel(n.type) + "</div></div></a>";
+    }).join("") : '<div class="empty">No notifications yet.</div>';
+    return '<div class="notif-panel" data-testid="notif-panel"><div class="card-hd" style="padding:12px 14px 8px"><h2>Notifications</h2>' +
+      '<button class="btn ghost sm" data-action="read-all-notif">Mark all read</button></div>' + body + "</div>";
+  }
+  function notifTypeLabel(t) {
+    return t === "like" ? "Like" : t === "comment" ? "Comment" : t === "follow" ? "Follow" : t === "agent_complete" ? "Agent" : t;
+  }
+  function bottomNavHtml(r) {
+    var n = unreadCount();
+    var item = function (href, key, ic, label) {
+      return '<a href="' + href + '" class="' + (r.name === key ? "active" : "") + '">' + icon(ic) + "<span>" + label + "</span>" +
+        (key === "feed" && n ? '<span class="ndot"></span>' : "") + "</a>";
+    };
+    var moreOn = ["library", "map", "market", "billing", "settings", "profile"].indexOf(r.name) >= 0;
+    return '<nav class="bottomnav" data-testid="bottom-nav">' +
+      item("#/home", "home", "home", "Home") +
+      item("#/feed", "feed", "feed", "Feed") +
+      item("#/projects", "projects", "folder", "Projects") +
+      item("#/agents", "agents", "bot", "Agents") +
+      '<button data-action="toggle-menu" class="' + (moreOn ? "active" : "") + '">' + icon("menu") + "<span>More</span></button></nav>";
+  }
+  function bannerHtml() {
+    if (state.workspace.bannerDismissed || ui.bannerDismissed) return "";
+    return '<div class="banner" data-testid="demo-banner"><p>You’re in a <strong>sample workspace</strong>. Other people here are sample personas, not live accounts. Anything you add stays in this browser.</p>' +
+      '<button type="button" data-action="dismiss-banner" aria-label="Dismiss">Dismiss</button></div>';
+  }
+
+  function pageHome() {
+    var me = userBy(SELF);
+    var first = (me.name || "").split(" ")[0];
+    var active = projectBy(state.workspace.activeProjectId) || ownProjects()[0];
+    var acts = selfActivities();
+    var recent = acts.slice(0, 5);
+    var assetsN = state.assets.filter(function (a) { return a.ownerId === SELF; }).length;
+    var verifiedN = state.assets.filter(function (a) { return a.ownerId === SELF && a.verified; }).length;
+    var used = state.workspace.agentUsed;
+    var lim = planLimit();
+    var running = state.agents.filter(function (a) { return a.status === "running"; });
+    var queued = state.agents.filter(function (a) { return a.status === "queued" || a.status === "waiting"; });
+    var away = state.agents.filter(function (a) { return a.whileAway && (a.status === "completed" || a.status === "running"); })
+      .sort(function (a, b) { return new Date(b.completedAt || b.startedAt || b.requestedAt) - new Date(a.completedAt || a.startedAt || a.requestedAt); });
+    var activeActs = active ? projectActivities(active.id).slice(0, 3) : [];
+    var pct = Math.min(100, Math.round((used / lim) * 100));
+    var usageCls = pct >= 100 ? "full" : pct >= 80 ? "warn" : "";
+
+    var hello = '<div class="hello" data-testid="hello"><div class="greet">' + greeting() + ", " + esc(first) + "</div>" +
+      "<h2>Pick up where the work left off.</h2>" +
+      '<p class="prop">The workspace your agents inherit — timeline, artifacts, and context, in one place.</p></div>';
+
+    var metrics = '<div class="metrics" data-testid="metrics">' +
+      metric("Projects", String(ownProjects().length), "In this workspace") +
+      metric("Library", String(assetsN), verifiedN + " verified") +
+      metric("Agent runs this month", used + " / " + lim, (state.workspace.plan === "pro" ? "Pro" : "Free") + " · demo figures") +
+      metric("While you were away", String(away.length), "Done or still running") +
+      "</div>";
+
+    var awayCard = '<section class="card" data-testid="agent-status"><div class="card-hd"><h2>While you were away</h2>' +
+      '<a class="btn ghost sm" href="#/agents">All agents</a></div><div class="card-bd">' +
+      '<div class="row mb-16"><span class="pill run"><span class="pulse"></span> Running ' + running.length + "</span>" +
+      '<span class="pill wait">Queued ' + queued.length + "</span>" +
+      '<span class="pill ok">This month ' + used + " / " + lim + "</span></div>" +
+      '<div class="usage ' + usageCls + '"><span style="width:' + pct + '%"></span></div>' +
+      '<p class="tiny muted mb-16">Agents continue from this project’s timeline and library. You pick the model; RayLee is not tied to one.</p>' +
+      (away.length ? away.slice(0, 5).map(function (j) {
+        var p = projectBy(j.projectId);
+        return '<div class="away-card"><div class="row"><div class="body" style="flex:1"><div class="strong">' + esc(j.title) + "</div>" +
+          '<div class="desc muted small">' + (p ? esc(p.name) + " · " : "") + modelName(j.model) +
+          (j.completedAt ? " · " + fmtRel(j.completedAt) : j.startedAt ? " · started " + fmtRel(j.startedAt) : "") + "</div></div>" +
+          '<span class="pill ' + (j.status === "running" ? "run" : j.status === "queued" || j.status === "waiting" ? "wait" : "ok") + '">' + agentStatusLabel(j.status) + "</span></div>" +
+          (j.result ? '<div class="tl-moved mt-8"><span>Result</span>' + esc(j.result) + "</div>" : "") +
+          "</div>";
+      }).join("") : '<p class="muted small">Nothing ran while you were away.</p>') +
+      "</div></section>";
+
+    var activeCard = !active ? "" : '<section class="card" data-testid="active-project"><div class="card-hd"><h2>Active project</h2>' + visPill(active.visibility) +
+      '<span class="pill ' + (active.status === "active" ? "ok" : "muted") + '">' + statusLabel(active.status) + "</span>" + sampleTag(active) + "</div><div class=\"card-bd\">" +
+      '<h3 style="font-size:16px;font-weight:640;letter-spacing:-.025em;margin-bottom:4px"><a class="link" href="#/projects/' + active.id + '">' + esc(active.name) + "</a></h3>" +
+      '<p class="muted small">' + esc(active.summary) + "</p>" +
+      '<div class="timeline mt-16">' + activeActs.map(tlItem).join("") + "</div>" +
+      '<div class="mt-12"><a class="btn ghost sm" href="#/projects/' + active.id + '">Open project</a> ' +
+      '<button class="btn sm" data-action="open-activity" data-project="' + active.id + '">Add activity</button></div>' +
+      "</div></section>";
+
+    var recentCard = '<section class="card" data-testid="recent-activity"><div class="card-hd"><h2>Recent activity</h2></div><div class="card-bd">' +
+      (recent.length ? recent.map(function (a) {
+        var p = projectBy(a.projectId);
+        return '<div class="list-item"><div class="body"><div class="title">' + esc(a.what) + '</div>' +
+          '<div class="desc">' + (p ? esc(p.name) + " · " : "") + fmtDT(a.at) +
+          (a.movedTo ? " · Now: " + esc(a.movedTo) : "") + "</div></div></div>";
+      }).join("") : empty("No activity yet.", "Add a step on a project. It stays on the timeline.")) +
+      "</div></section>";
+
+    return '<div class="page-enter" data-testid="page-inner-home">' + bannerHtml() + hello + metrics +
+      '<div class="grid-2"><div class="stack">' + awayCard + recentCard + '</div><div class="stack">' + activeCard + feedTeaser() + "</div></div></div>";
+  }
+  function metric(lbl, val, sub) {
+    return '<div class="metric"><div class="lbl">' + esc(lbl) + '</div><div class="val tabular">' + esc(val) + '</div><div class="sub">' + esc(sub) + "</div></div>";
+  }
+  function empty(title, body, action) {
+    return '<div class="empty"><div class="empty-ico">' + icon("folder") + "</div><h3>" + esc(title) + "</h3><p>" + esc(body) + "</p>" + (action || "") + "</div>";
+  }
+  function feedTeaser() {
+    var items = feedItems("all").slice(0, 3);
+    return '<section class="card"><div class="card-hd"><h2>From the feed</h2><a class="btn ghost sm" href="#/feed">Open</a></div><div class="card-bd">' +
+      items.map(function (a) {
+        var u = userBy(a.ownerId);
+        return '<div class="list-item">' + avHtml(u, "sm") + '<div class="body"><div class="title"><a class="link" href="#/profile/' + u.id + '">' + esc(u.name) + "</a></div>" +
+          '<div class="desc">' + esc(a.what.slice(0, 80)) + (a.what.length > 80 ? "…" : "") + "</div></div></div>";
+      }).join("") + "</div></section>";
+  }
+  function tlItem(a) {
+    var ev = effectiveVis(projectBy(a.projectId), a);
+    var cls = a.branchId ? "branch" : a.source === "agent" ? "agent" : "";
+    return '<div class="tl-item ' + cls + '" data-testid="activity-' + esc(a.id) + '">' +
+      '<div class="tl-when">' + esc(fmtDT(a.at)) + " " + visPill(ev) +
+      (a.verified || (a.assetId && assetBy(a.assetId) && assetBy(a.assetId).verified) ? verifiedPill(true) : "") +
+      (a.sample ? sampleTag(a) : "") + "</div>" +
+      '<div class="tl-what">' + esc(a.what) + "</div>" +
+      (a.movedTo ? '<div class="tl-moved"><span>Now</span>' + esc(a.movedTo) + "</div>" : "") +
+      '<div class="tl-meta">' +
+      (a.source === "agent" ? "Agent · " + modelPill(a.model) : "You") +
+      (a.assetId && assetBy(a.assetId) ? ' · Asset “<a class="link" href="#/library">' + esc(assetBy(a.assetId).name) + "</a>”" : "") +
+      (a.branchId ? " · Branched" : "") +
+      (a.ownerId === SELF ? ' <button class="btn ghost sm" data-action="edit-vis" data-id="' + esc(a.id) + '">Visibility</button>' : "") +
+      "</div></div>";
+  }
+
+  function pageProjects() {
+    var list = ownProjects();
+    var cards = list.map(function (p) {
+      var acts = state.activities.filter(function (a) { return a.projectId === p.id; });
+      var last = acts.slice().sort(function (a, b) { return new Date(b.at) - new Date(a.at); })[0];
+      var ast = state.assets.filter(function (a) { return a.projectId === p.id; }).length;
+      var isA = state.workspace.activeProjectId === p.id;
+      return '<a class="proj-card" href="#/projects/' + p.id + '" data-testid="project-' + p.id + '">' +
+        '<div class="proj-name-row"><h3>' + esc(p.name) + "</h3>" +
+        '<span class="pill ' + (p.status === "active" ? "ok" : "muted") + '">' + statusLabel(p.status) + "</span>" +
+        visPill(p.visibility) + (isA ? '<span class="pill accent">Active</span>' : "") + sampleTag(p) + "</div>" +
+        '<p class="muted small">' + esc(p.summary) + "</p>" +
+        '<p class="tiny muted mt-8">' + acts.length + " activities · " + ast + " assets" + (last ? " · Updated " + fmtRel(last.at) : "") + "</p></a>";
+    }).join("");
+    return '<div class="page-enter">' + bannerHtml() +
+      '<div class="row mb-16"><div><h2 class="strong" style="font-size:15px;letter-spacing:-.02em">Your projects</h2>' +
+      '<p class="tiny muted mt-8">A project is the thing you’re facing. The timeline and library live on it.</p></div>' +
+      '<div class="spacer"></div>' +
+      '<button class="btn sm" data-action="open-project-new" data-testid="btn-new-project">New project</button></div>' +
+      '<div class="card" data-testid="project-list">' + (cards || empty("No projects yet", "Start one. It only has to be a name and a sentence.")) + "</div></div>";
+  }
+
+  function pageProjectDetail(id) {
+    var p = projectBy(id);
+    if (!p) return empty("Project not found", "It may have been removed, or the link is stale.");
+    if (!canViewProject(p)) return empty("This project is private", "Only the owner can see it.");
+    var mine = p.ownerId === SELF;
+    var acts = projectActivities(p.id);
+    var br = projectBranches(p.id).filter(function (b) {
+      return canViewVis(b.ownerId, effectiveVis(p, { visibility: b.visibility }), SELF);
+    });
+    var owner = userBy(p.ownerId);
+    var head = '<div class="row mb-8">' + (mine ? '<a class="muted small" href="#/projects">← Projects</a>' : '<a class="muted small" href="#/profile/' + p.ownerId + '">← ' + esc(owner.name) + "</a>") + "</div>" +
+      '<div class="row mb-16" style="align-items:flex-start"><div style="flex:1;min-width:0">' +
+      '<h2 style="font-size:24px;font-weight:640;letter-spacing:-.035em">' + esc(p.name) + "</h2>" +
+      '<p class="muted mt-8">' + esc(p.summary) + "</p>" +
+      '<div class="row mt-12">' +
+      '<span class="pill ' + (p.status === "active" ? "ok" : "muted") + '">' + statusLabel(p.status) + "</span>" +
+      visPill(p.visibility) + sampleTag(p) +
+      (!mine ? avHtml(owner, "sm") + '<a class="link" href="#/profile/' + owner.id + '">' + esc(owner.name) + "</a>" : "") +
+      "</div></div>" +
+      (mine ? '<div class="row"><button class="btn sm" data-action="open-activity" data-project="' + p.id + '" data-testid="btn-add-activity">Add activity</button>' +
+        (state.workspace.activeProjectId !== p.id ? '<button class="btn ghost sm" data-action="set-active" data-id="' + p.id + '">Set as active</button>' : "") +
+        '<button class="btn ghost sm" data-action="edit-proj-vis" data-id="' + p.id + '">Visibility</button></div>' : "") +
+      "</div>";
+    var timeline = '<section class="card" data-testid="project-timeline"><div class="card-hd"><h2>Timeline</h2><span class="muted tiny">' + acts.length + " · when, what, and where it moved</span></div><div class=\"card-bd\">" +
+      (acts.length ? '<div class="timeline">' + acts.map(tlItem).join("") + "</div>" : empty("No activity yet", "Add a step. Optionally register it as an asset at the same time.")) +
+      "</div></section>";
+    var branches = '<section class="card mt-16" data-testid="project-branches"><div class="card-hd"><h2>Branches</h2><span class="muted tiny">When the purpose changed</span></div><div class="card-bd">' +
+      (br.length ? br.map(function (b) {
+        return '<div class="branch-card"><div class="tiny muted">' + fmtDT(b.at) + " " + visPill(b.visibility || p.visibility) + sampleTag(b) + "</div>" +
+          '<div class="branch-flow"><div class="box">' + esc(b.fromPurpose) + '</div><span class="arrow">→</span><div class="box to">' + esc(b.toPurpose) + "</div></div>" +
+          '<p class="small muted">' + esc(b.reason) + "</p></div>";
+      }).join("") : '<p class="muted small">No purpose changes recorded.</p>') +
+      "</div></section>";
+    return '<div class="page-enter">' + bannerHtml() + head + timeline + branches + "</div>";
+  }
+
+  function visSelect(name, val, id) {
+    return '<select name="' + name + '" id="' + (id || "") + '">' +
+      '<option value="public"' + (val === "public" ? " selected" : "") + ">Public — appears on the feed and map</option>" +
+      '<option value="followers"' + (val === "followers" ? " selected" : "") + ">Followers — people who follow you</option>" +
+      '<option value="private"' + (val === "private" ? " selected" : "") + ">Private — only you</option></select>";
+  }
+  function modalActivity(projectId) {
+    var p = projectBy(projectId);
+    if (!p) return "";
+    var branches = projectBranches(projectId);
+    return '<h2>Add an activity</h2><form class="form-grid" id="form-add-activity" data-testid="form-add-activity" data-project="' + p.id + '">' +
+      '<div class="field"><label>Project</label><input type="text" value="' + esc(p.name) + '" disabled></div>' +
+      '<div class="field"><label for="activity-at">When</label><input id="activity-at" name="at" type="datetime-local" value="' + toLocalInput() + '" required></div>' +
+      '<div class="field"><label for="activity-what">What did you do?</label><textarea id="activity-what" name="what" required placeholder="What happened" data-testid="activity-what"></textarea></div>' +
+      '<div class="field"><label for="activity-moved">Where did it move?</label><input id="activity-moved" name="movedTo" type="text" required placeholder="Where the work sits now" data-testid="activity-moved"></div>' +
+      (branches.length ? '<div class="field"><label for="activity-branch">Branch (optional)</label><select id="activity-branch" name="branchId"><option value="">None</option>' +
+        branches.map(function (b) { return '<option value="' + b.id + '">' + esc(b.toPurpose) + "</option>"; }).join("") + "</select></div>" : "") +
+      '<div class="field"><label for="activity-vis">Visibility</label>' + visSelect("visibility", p.visibility, "activity-vis") +
+      '<span class="hint">Cannot be wider than the project. A private project keeps every activity private.</span></div>' +
+      '<label class="check"><input type="checkbox" name="asAsset" id="activity-as-asset" data-testid="activity-as-asset"> Also register this as an asset</label>' +
+      '<div id="asset-extra" style="display:none" class="form-grid">' +
+        '<div class="field"><label for="asset-name-inline">Asset name</label><input id="asset-name-inline" name="assetName" type="text"></div>' +
+        '<div class="field"><label for="asset-type-inline">Type</label><select id="asset-type-inline" name="assetType">' +
+        ASSET_TYPES.map(function (t) { return "<option>" + t + "</option>"; }).join("") + "</select></div>" +
+        '<label class="check"><input type="checkbox" name="assetVerified"> Verified (tied to an external record)</label>' +
+      "</div>" +
+      '<div class="row"><button type="submit" class="btn" data-testid="activity-submit">Add to timeline</button>' +
+      '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button></div></form>';
+  }
+  function modalNewProject() {
+    return '<h2>New project</h2><form class="form-grid" id="form-add-project" data-testid="form-add-project">' +
+      '<div class="field"><label for="np-name">Name</label><input id="np-name" name="name" required type="text" placeholder="A name you can face tomorrow"></div>' +
+      '<div class="field"><label for="np-sum">In one sentence</label><textarea id="np-sum" name="summary" required></textarea></div>' +
+      '<div class="field"><label>Visibility</label>' + visSelect("visibility", "private", "np-vis") + "</div>" +
+      '<div class="row"><button class="btn" type="submit">Create</button><button type="button" class="btn ghost" data-action="close-modal">Cancel</button></div></form>';
+  }
+  function modalVis(kind, id) {
+    var cur = "public", title = "Visibility";
+    if (kind === "activity") {
+      var a = activityBy(id); if (!a) return "";
+      cur = a.visibility; title = "Activity visibility";
+    } else {
+      var p = projectBy(id); if (!p) return "";
+      cur = p.visibility; title = "Project visibility";
+    }
+    return "<h2>" + title + '</h2><form class="form-grid" id="form-vis" data-kind="' + kind + '" data-id="' + esc(id) + '">' +
+      '<div class="field"><label>Who can see this</label>' + visSelect("visibility", cur, "vis-edit") +
+      '<span class="hint">Public activities appear on the feed and the map. Followers-only is for people who follow you. Private stays in your workspace. A project’s visibility is the ceiling.</span></div>' +
+      '<div class="row"><button class="btn" type="submit">Update</button><button type="button" class="btn ghost" data-action="close-modal">Cancel</button></div></form>';
+  }
+
+
+  function normalizeStatus(s) { return s === "waiting" ? "queued" : s; }
+  function pageAgents() {
+    var filter = ui.agentFilter;
+    var jobs = state.agents.slice().sort(function (a, b) { return new Date(b.requestedAt) - new Date(a.requestedAt); })
+      .filter(function (j) {
+        if (filter === "all") return true;
+        return normalizeStatus(j.status) === filter;
+      });
+    var connected = MODELS.filter(function (m) { return state.modelsConnected[m.id]; });
+    var form = '<section class="card mb-16" data-testid="agent-form-card"><div class="card-hd"><h2>Ask an agent</h2></div><div class="card-bd">' +
+      '<p class="muted small mb-16">It picks up this project’s timeline and library. Choose any connected model — RayLee is not built around one.</p>' +
+      '<form class="form-grid" id="form-agent" data-testid="form-agent">' +
+      '<div class="field"><label for="ag-title">Title</label><input id="ag-title" name="title" required type="text" data-testid="agent-title" placeholder="e.g. Tighten the outline"></div>' +
+      '<div class="field"><label for="ag-proj">Project</label><select id="ag-proj" name="projectId" required>' +
+      ownProjects().map(function (p) { return '<option value="' + p.id + '"' + (p.id === state.workspace.activeProjectId ? " selected" : "") + ">" + esc(p.name) + "</option>"; }).join("") +
+      "</select></div>" +
+      '<div class="field"><label for="ag-model">Model</label><select id="ag-model" name="model" required data-testid="agent-model">' +
+      connected.map(function (m) { return '<option value="' + m.id + '">' + esc(m.name) + " · " + esc(m.provider) + "</option>"; }).join("") +
+      "</select><span class=\"hint\">Connected models only. Manage them in Settings.</span></div>" +
+      '<div class="field"><label for="ag-req">Instructions</label><textarea id="ag-req" name="request" required data-testid="agent-request"></textarea></div>' +
+      '<div class="field"><label>Visibility of the result on the timeline</label>' + visSelect("visibility", "private", "ag-vis") + "</div>" +
+      '<div class="row"><button class="btn" type="submit" data-testid="agent-submit">Run</button>' +
+      '<span class="tiny muted">In this demo, jobs move Queued → Running → Done on a timer. No model is actually called.</span></div></form></div></section>';
+    var chips = '<div class="filters" data-testid="agent-filters">' +
+      [{ k: "all", l: "All" }, { k: "running", l: "Running" }, { k: "queued", l: "Queued" }, { k: "completed", l: "Done" }].map(function (x) {
+        var n = x.k === "all" ? state.agents.length : state.agents.filter(function (j) { return normalizeStatus(j.status) === x.k; }).length;
+        return '<button class="chip' + (filter === x.k ? " on" : "") + '" data-action="agent-filter" data-key="' + x.k + '">' + x.l + " " + n + "</button>";
+      }).join("") + "</div>";
+    var list = '<section class="card" data-testid="agent-list"><div class="card-hd"><h2>Runs</h2></div><div class="card-bd">' +
+      (jobs.length ? jobs.map(agentJobHtml).join("") : empty("No runs in this view", "Ask an agent to continue from a project.")) +
+      "</div></section>";
+    return '<div class="page-enter">' + bannerHtml() +
+      '<div class="grid-2" style="align-items:start"><div>' + chips + list + "</div>" + form + "</div></div>";
+  }
+  function agentJobHtml(j) {
+    var p = projectBy(j.projectId);
+    var stn = normalizeStatus(j.status);
+    var st = stn === "running" ? "run" : stn === "queued" ? "wait" : "ok";
+    return '<div class="agent-job" data-testid="agent-' + esc(j.id) + '" data-status="' + stn + '">' +
+      '<div class="row"><h3>' + esc(j.title) + "</h3>" +
+      '<span class="pill ' + st + '">' + (stn === "running" ? '<span class="pulse"></span> ' : "") + agentStatusLabel(stn) + "</span>" +
+      modelPill(j.model) + (j.whileAway ? '<span class="pill muted">While away</span>' : "") + sampleTag(j) + "</div>" +
+      '<p class="small muted mt-8">' + (p ? esc(p.name) + " · " : "") + "Asked " + fmtDT(j.requestedAt) +
+      (j.startedAt ? " · Started " + fmtDT(j.startedAt) : "") +
+      (j.completedAt ? " · Done " + fmtDT(j.completedAt) : "") + "</p>" +
+      (j.request ? '<p class="small mt-8">' + esc(j.request) + "</p>" : "") +
+      (stn === "running" ? '<div class="progress-ind"><span></span></div>' : "") +
+      (j.result ? '<div class="tl-moved mt-12"><span>Result</span>' + esc(j.result) + "</div>" : "") +
+      "</div>";
+  }
+
+  function pageLibrary() {
+    var mine = state.assets.filter(function (a) { return a.ownerId === SELF; });
+    var list = mine.filter(function (a) {
+      if (ui.assetType !== "all" && a.type !== ui.assetType) return false;
+      if (ui.assetProj !== "all" && a.projectId !== ui.assetProj) return false;
+      if (ui.assetVerified === "yes" && !a.verified) return false;
+      if (ui.assetVerified === "no" && a.verified) return false;
+      return true;
+    }).sort(function (a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+    var filters = '<div class="row mb-12"><div><h2 class="strong" style="font-size:15px;letter-spacing:-.02em">Library</h2><p class="tiny muted mt-8">Deliverables, data, verifications, notes, and tools — each with an owner and a provenance.</p></div><div class="spacer"></div>' +
+      '<button class="btn sm" data-action="open-asset" data-testid="btn-add-asset">Add asset</button></div>' +
+      '<div class="filters">' +
+      '<button class="chip' + (ui.assetType === "all" ? " on" : "") + '" data-action="asset-type" data-key="all">All types</button>' +
+      ASSET_TYPES.map(function (t) {
+        return '<button class="chip' + (ui.assetType === t ? " on" : "") + '" data-action="asset-type" data-key="' + t + '">' + t + "</button>";
+      }).join("") + "</div>" +
+      '<div class="filters">' +
+      '<button class="chip' + (ui.assetProj === "all" ? " on" : "") + '" data-action="asset-proj" data-key="all">All projects</button>' +
+      ownProjects().map(function (p) {
+        return '<button class="chip' + (ui.assetProj === p.id ? " on" : "") + '" data-action="asset-proj" data-key="' + p.id + '">' + esc(p.name) + "</button>";
+      }).join("") +
+      '<button class="chip' + (ui.assetVerified === "yes" ? " on" : "") + '" data-action="asset-ver" data-key="yes">Verified</button>' +
+      '<button class="chip' + (ui.assetVerified === "no" ? " on" : "") + '" data-action="asset-ver" data-key="no">Self-reported</button></div>';
+    var rows = list.map(function (a) {
+      var p = projectBy(a.projectId);
+      var o = userBy(a.ownerId);
+      return "<tr data-testid=\"asset-" + esc(a.id) + "\"><td><strong>" + esc(a.name) + "</strong>" + (a.note ? '<div class="tiny muted">' + esc(a.note) + "</div>" : "") + "</td>" +
+        "<td>" + esc(a.type) + "</td>" +
+        "<td>" + avHtml(o, "sm") + " " + esc(o.name) + (o.sample ? " " + sampleTag(o) : "") + "</td>" +
+        "<td class=\"small\">" + esc(a.provenance) + (a.model ? "<div class=\"mt-8\">" + modelPill(a.model) + "</div>" : "") + "</td>" +
+        "<td>" + verifiedPill(a.verified) + "</td>" +
+        "<td>" + visPill(a.visibility) + "</td>" +
+        "<td class=\"small\">" + (p ? '<a class="link" href="#/projects/' + p.id + '">' + esc(p.name) + "</a>" : "") +
+        '<div class="tiny muted">' + fmtD(a.createdAt) + "</div></td></tr>";
+    }).join("");
+    return '<div class="page-enter">' + bannerHtml() + filters +
+      '<div class="card table-wrap" data-testid="asset-table"><table class="data"><thead><tr>' +
+      "<th>Name</th><th>Type</th><th>Owner</th><th>Provenance</th><th>Verification</th><th>Visibility</th><th>Project</th></tr></thead><tbody>" +
+      (rows || '<tr><td colspan="7">' + empty("Nothing in this view", "Add an asset, or loosen the filters.") + "</td></tr>") +
+      "</tbody></table></div></div>";
+  }
+  function modalAsset() {
+    return '<h2>Add an asset</h2><form class="form-grid" id="form-add-asset" data-testid="form-add-asset">' +
+      '<div class="field"><label for="as-name">Name</label><input id="as-name" name="name" required type="text"></div>' +
+      '<div class="field"><label for="as-type">Type</label><select id="as-type" name="type">' +
+      ASSET_TYPES.map(function (t) { return "<option>" + t + "</option>"; }).join("") + "</select></div>" +
+      '<div class="field"><label for="as-proj">Project</label><select id="as-proj" name="projectId" required>' +
+      ownProjects().map(function (p) { return '<option value="' + p.id + '">' + esc(p.name) + "</option>"; }).join("") + "</select></div>" +
+      '<div class="field"><label for="as-prov">Provenance</label><textarea id="as-prov" name="provenance" required placeholder="Who made this, when, and how"></textarea></div>' +
+      '<div class="field"><label>Visibility</label>' + visSelect("visibility", "private", "as-vis") + "</div>" +
+      '<label class="check"><input type="checkbox" name="verified"> Verified (tied to an external record)</label>' +
+      '<div class="row"><button class="btn" type="submit">Add to library</button><button type="button" class="btn ghost" data-action="close-modal">Cancel</button></div></form>';
+  }
+
+  function feedItems(filter) {
+    return state.activities.filter(function (a) {
+      if (!canViewActivity(a)) return false;
+      var ev = effectiveVis(projectBy(a.projectId), a);
+      if (a.ownerId === SELF && ev === "private") return false;
+      if (filter === "following" && !isFollowing(SELF, a.ownerId) && a.ownerId !== SELF) return false;
+      if (filter === "me" && a.ownerId !== SELF) return false;
+      return true;
+    }).sort(function (a, b) { return new Date(b.at) - new Date(a.at); });
+  }
+  function feedCard(a) {
+    var u = userBy(a.ownerId);
+    var p = projectBy(a.projectId);
+    var ev = effectiveVis(p, a);
+    var likes = likesOf(a.id);
+    var comments = commentsOf(a.id);
+    var on = likedByMe(a.id);
+    var open = !!ui.commentsOpen[a.id];
+    var branch = a.branchId ? state.branches.filter(function (b) { return b.id === a.branchId; })[0] : null;
+    var ast = a.assetId ? assetBy(a.assetId) : null;
+    return '<article class="feed-item" data-testid="feed-' + esc(a.id) + '">' +
+      '<div class="feed-head">' + avHtml(u) +
+      '<div style="flex:1;min-width:0"><div>' +
+      '<a class="who" href="#/profile/' + u.id + '">' + esc(u.name) + "</a> " +
+      (u.sample ? sampleTag(u) : "") +
+      (p ? ' <span class="muted">·</span> <a class="muted" href="#/projects/' + p.id + '">' + esc(p.name) + "</a>" : "") +
+      '</div><div class="tiny muted">' + fmtRel(a.at) + " · " + fmtDT(a.at) + " · " + visLabel(ev) +
+      (a.source === "agent" ? " · Agent" : "") +
+      "</div></div></div>" +
+      '<div class="feed-body"><p>' + esc(a.what) + "</p>" +
+      (a.movedTo ? '<div class="tl-moved"><span>Now</span>' + esc(a.movedTo) + "</div>" : "") +
+      (branch ? '<div class="tl-moved mt-8"><span>Purpose changed</span>' + esc(branch.fromPurpose) + " → " + esc(branch.toPurpose) + "</div>" : "") +
+      (ast ? '<div class="tiny muted mt-8">Asset “' + esc(ast.name) + "” · " + esc(ast.type) + " · " + (ast.verified ? "Verified" : "Self-reported") + "</div>" : "") +
+      (a.model ? '<div class="mt-8">' + modelPill(a.model) + "</div>" : "") +
+      "</div>" +
+      '<div class="feed-acts">' +
+      '<button class="react-btn' + (on ? " on" : "") + '" data-action="like" data-id="' + esc(a.id) + '" data-testid="like-' + esc(a.id) + '" aria-pressed="' + on + '">' +
+      icon("heart") + " " + likes.length + "</button>" +
+      '<button class="react-btn" data-action="toggle-comments" data-id="' + esc(a.id) + '">' + icon("chat") + " " + comments.length + "</button>" +
+      "</div>" +
+      (open || comments.length ? commentBlock(a.id, comments) : "") +
+      "</article>";
+  }
+  function commentBlock(actId, comments) {
+    var list = comments.map(function (c) {
+      var u = userBy(c.userId);
+      return '<div class="comment" data-testid="comment-' + esc(c.id) + '">' + avHtml(u, "sm") +
+        '<div class="c-body"><div><a class="strong link" href="#/profile/' + u.id + '">' + esc(u.name) + "</a> " +
+        (u.sample ? sampleTag(u) : "") +
+        ' <span class="tiny muted">' + fmtRel(c.at) + "</span></div>" +
+        "<div>" + esc(c.body) + "</div></div></div>";
+    }).join("");
+    return '<div class="comments" data-testid="comments-' + esc(actId) + '">' + list +
+      '<form class="comment-form" data-action="comment" data-id="' + esc(actId) + '">' +
+      avHtml(SELF, "sm") +
+      '<input type="text" name="body" required maxlength="400" placeholder="Write a comment" data-testid="comment-input-' + esc(actId) + '" autocomplete="off">' +
+      '<button class="btn sm" type="submit">Send</button></form></div>';
+  }
+  function pageFeed() {
+    var f = ui.feedFilter;
+    var items = feedItems(f);
+    var chips = '<div class="filters" data-testid="feed-filters">' +
+      '<button class="chip' + (f === "all" ? " on" : "") + '" data-action="feed-filter" data-key="all">Everything</button>' +
+      '<button class="chip' + (f === "following" ? " on" : "") + '" data-action="feed-filter" data-key="following">Following</button>' +
+      '<button class="chip' + (f === "me" ? " on" : "") + '" data-action="feed-filter" data-key="me">Yours</button></div>';
+    var lead = '<p class="muted small mb-16">Public work, and followers-only work from people you follow. Your private timeline stays in your workspace. Other people here are samples.</p>';
+    return '<div class="page-enter">' + bannerHtml() + lead + chips +
+      '<div data-testid="feed-list">' +
+      (items.length ? items.map(feedCard).join("") : empty("The feed is quiet", "Set an activity to Public and it will show up here — including your own.")) +
+      "</div></div>";
+  }
+
+  function pageProfile(id) {
+    var u = userBy(id);
+    if (!u || !u.name || u.name === "Unknown") return empty("Person not found", "That profile isn’t in this workspace.");
+    var mine = u.id === SELF;
+    var following = isFollowing(SELF, u.id);
+    var fol = followersOf(u.id).length;
+    var fing = followingOf(u.id).length;
+    var projs = state.projects.filter(function (p) { return p.ownerId === u.id && canViewProject(p); });
+    var acts = state.activities.filter(function (a) {
+      return a.ownerId === u.id && canViewActivity(a) && effectiveVis(projectBy(a.projectId), a) !== "private";
+    }).sort(function (a, b) { return new Date(b.at) - new Date(a.at); });
+    var tab = ui.profileTab;
+    var btn = mine ? '<a class="btn ghost sm" href="#/settings">Workspace settings</a>' :
+      (following
+        ? '<button class="btn ghost" data-action="unfollow" data-id="' + u.id + '" data-testid="btn-unfollow">Following</button>'
+        : '<button class="btn" data-action="follow" data-id="' + u.id + '" data-testid="btn-follow">Follow</button>');
+    var hd = '<div class="profile-hd" data-testid="profile-hd">' + avHtml(u, "lg") +
+      "<div style=\"flex:1\"><div class=\"row\"><h2>" + esc(u.name) + "</h2>" + (u.sample ? sampleTag(u) : "") + "</div>" +
+      '<p class="muted mt-8">' + esc(u.bio || "") + "</p>" +
+      '<div class="counts"><span><strong>' + fing + "</strong> following</span><span><strong>" + fol + "</strong> followers</span>" +
+      "<span><strong>" + projs.length + "</strong> visible projects</span></div>" +
+      '<div class="row mt-12">' + btn + "</div></div></div>";
+    var tabs = '<div class="tabs"><button class="' + (tab === "timeline" ? "active" : "") + '" data-action="profile-tab" data-key="timeline">Timeline</button>' +
+      '<button class="' + (tab === "projects" ? "active" : "") + '" data-action="profile-tab" data-key="projects">Projects</button></div>';
+    var body = "";
+    if (tab === "projects") {
+      body = projs.length ? '<div class="card">' + projs.map(function (p) {
+        var n = state.activities.filter(function (a) { return a.projectId === p.id && canViewActivity(a); }).length;
+        return '<a class="proj-card" href="#/projects/' + p.id + '"><div class="proj-name-row"><h3>' + esc(p.name) + "</h3>" +
+          visPill(p.visibility) + '<span class="pill ' + (p.status === "active" ? "ok" : "muted") + '">' + statusLabel(p.status) + "</span>" + sampleTag(p) + "</div>" +
+          '<p class="muted small">' + esc(p.summary) + "</p>" +
+          '<p class="tiny muted mt-8">' + n + " activities</p></a>";
+      }).join("") + "</div>" : empty("No visible projects", "Private work stays with its owner.");
+    } else {
+      body = acts.length ? acts.map(feedCard).join("") : empty("No visible activity", "Follow to see work shared with followers.");
+    }
+    return '<div class="page-enter">' + bannerHtml() + hd + tabs + '<div data-testid="profile-body">' + body + "</div></div>";
+  }
+
+  function pageMap() {
+    var own = ownProjects();
+    var others = state.projects.filter(function (p) { return p.ownerId !== SELF && canViewProject(p) && p.visibility === "public"; });
+    var lead = '<p class="muted small mb-16">Your projects and their timelines, and other people’s <strong>public</strong> work. Other people are samples. The marketplace is a separate surface — listed work with provenance, not a promise of income.</p>';
+    return '<div class="page-enter">' + bannerHtml() + lead + mapSvg(own, "Your projects", true) +
+      '<div class="mt-24">' + mapSvg(others, "Public work from others", false) + "</div></div>";
+  }
+  function mapSvg(projects, title, isOwn) {
+    if (!projects.length) {
+      return '<section class="card"><div class="card-hd"><h2>' + esc(title) + "</h2></div><div class=\"card-bd\">" +
+        empty("Nothing to plot", isOwn ? "Add activity and it will show up here." : "Public projects from people in this demo will appear here.") + "</div></section>";
+    }
+    var allActs = [];
+    projects.forEach(function (p) {
+      state.activities.filter(function (a) { return a.projectId === p.id && canViewActivity(a); }).forEach(function (a) { allActs.push(a); });
+    });
+    var times = allActs.map(function (a) { return new Date(a.at).getTime(); });
+    if (!times.length) times = [Date.now()];
+    var tMin = Math.min.apply(null, times);
+    var tMax = Math.max.apply(null, times);
+    if (tMax === tMin) tMax = tMin + 86400000 * 30;
+    var padL = 176, padR = 24, padT = 28, rowH = 72;
+    var innerW = 860;
+    var w = padL + innerW + padR;
+    var h = padT + projects.length * rowH + 36;
+    var xOf = function (iso) { return padL + ((new Date(iso).getTime() - tMin) / (tMax - tMin)) * innerW; };
+    var colors = isOwn ? ["#EDEBE6", "#7EB0E0", "#4ABA7A"] : ["#C98996", "#7BA89A", "#C4B08A", "#8A8AB5"];
+    if (getTheme() === "light") colors = isOwn ? ["#141413", "#1A5F9E", "#1F7A4C"] : ["#6B3F4F", "#2F4A43", "#4A3F2F", "#3A3A55"];
+    var months = [];
+    var cur = new Date(new Date(tMin).getFullYear(), new Date(tMin).getMonth(), 1);
+    var end = new Date(tMax);
+    while (cur <= end) { months.push(new Date(cur)); cur.setMonth(cur.getMonth() + 1); }
+    var monthLines = months.map(function (d) {
+      var x = xOf(d.toISOString());
+      if (x < padL || x > padL + innerW) return "";
+      var ink = getTheme() === "light" ? "#9A978E" : "#5E5C56";
+      var ln = getTheme() === "light" ? "#E6E3DB" : "rgba(255,255,255,.07)";
+      return '<line x1="' + x + '" y1="' + (padT - 8) + '" x2="' + x + '" y2="' + (h - 22) + '" stroke="' + ln + '" />' +
+        '<text x="' + x + '" y="' + (h - 6) + '" font-size="10" fill="' + ink + '">' + d.toLocaleString("en-US", { month: "short" }) + "</text>";
+    }).join("");
+    var ink = getTheme() === "light" ? "#141413" : "#F3F1EB";
+    var mut = getTheme() === "light" ? "#6B6962" : "#8F8C83";
+    var rows = projects.map(function (p, i) {
+      var y = padT + i * rowH + 24;
+      var acts = state.activities.filter(function (a) { return a.projectId === p.id && canViewActivity(a); })
+        .sort(function (a, b) { return new Date(a.at) - new Date(b.at); });
+      var col = colors[i % colors.length];
+      var owner = userBy(p.ownerId);
+      var pts = acts.map(function (a) { return { a: a, x: xOf(a.at) }; });
+      var lines = "";
+      for (var k = 1; k < pts.length; k++) {
+        lines += '<line x1="' + pts[k - 1].x + '" y1="' + y + '" x2="' + pts[k].x + '" y2="' + y + '" stroke="' + col + '" stroke-width="2"/>';
+      }
+      var branchMarks = projectBranches(p.id).map(function (b) {
+        var x = xOf(b.at);
+        return '<path d="M' + x + " " + y + " Q" + x + " " + (y - 22) + " " + (x + 18) + " " + (y - 22) + '" fill="none" stroke="#E23C24" stroke-width="1.5"/>' +
+          '<circle cx="' + x + '" cy="' + (y - 22) + '" r="3.5" fill="#E23C24"/>' +
+          '<text x="' + (x + 24) + '" y="' + (y - 19) + '" font-size="9" fill="#E23C24">branch</text>';
+      }).join("");
+      var dots = pts.map(function (pt) {
+        var ev = effectiveVis(p, pt.a);
+        var fill = ev === "private" ? (getTheme() === "light" ? "#fff" : "#191917") : col;
+        return '<circle cx="' + pt.x + '" cy="' + y + '" r="5.5" fill="' + fill + '" stroke="' + col + '" stroke-width="2" style="cursor:pointer" data-action="map-tip" data-id="' + pt.a.id + '">' +
+          "<title>" + esc(fmtD(pt.a.at) + " " + pt.a.what) + "</title></circle>";
+      }).join("");
+      var nm = p.name.length > 22 ? p.name.slice(0, 22) + "…" : p.name;
+      var label = '<text x="8" y="' + (y - 8) + '" font-size="11" font-weight="600" fill="' + ink + '">' + esc(nm) + "</text>" +
+        '<text x="8" y="' + (y + 7) + '" font-size="9" fill="' + mut + '">' + esc(isOwn ? visLabel(p.visibility) : owner.name) + "</text>";
+      return "<g>" + label + lines + branchMarks + dots + "</g>";
+    }).join("");
+    var tip = "";
+    if (ui.mapTip) {
+      var a = activityBy(ui.mapTip);
+      if (a) {
+        var p = projectBy(a.projectId);
+        var ou = userBy(a.ownerId);
+        tip = '<div class="map-tip" data-testid="map-tip"><strong>' + esc(ou.name) + "</strong> · " + (p ? '<a class="link" href="#/projects/' + p.id + '">' + esc(p.name) + "</a>" : "") +
+          " · " + fmtDT(a.at) + '<div class="mt-8">' + esc(a.what) + "</div>" +
+          (a.movedTo ? '<div class="tiny muted mt-8">Now: ' + esc(a.movedTo) + "</div>" : "") + "</div>";
+      }
+    } else {
+      tip = '<div class="map-tip muted">Select a point to read the activity.</div>';
+    }
+    return '<section class="card" data-testid="' + (isOwn ? "map-own" : "map-others") + '"><div class="card-hd"><h2>' + esc(title) + "</h2>" +
+      (isOwn ? "" : '<span class="pill sample">Sample people, public work</span>') + "</div>" +
+      '<div class="map-canvas"><div class="map-legend">' +
+      (isOwn ? "<span>Line = timeline</span><span><i style=\"background:#E23C24\"></i>Branch (purpose changed)</span><span>Hollow point = private</span>" :
+        "<span>Public projects only</span><span>Followers-only and private work are omitted</span>") +
+      '</div><svg viewBox="0 0 ' + w + " " + h + '" width="100%" style="min-height:' + Math.min(h, 420) + 'px" role="img" aria-label="' + esc(title) + '">' +
+      monthLines + rows + "</svg></div>" + tip + "</section>";
+  }
+
+  function pageMarket() {
+    var list = (state.listings || []).filter(function (l) {
+      var a = assetBy(l.assetId);
+      if (!a) return false;
+      if (ui.marketFilter !== "all" && a.type !== ui.marketFilter) return false;
+      return canViewVis(a.ownerId, a.visibility, SELF);
+    }).sort(function (a, b) { return new Date(b.listedAt) - new Date(a.listedAt); });
+    var chips = '<div class="filters"><button class="chip' + (ui.marketFilter === "all" ? " on" : "") + '" data-action="market-filter" data-key="all">All</button>' +
+      ASSET_TYPES.map(function (t) {
+        return '<button class="chip' + (ui.marketFilter === t ? " on" : "") + '" data-action="market-filter" data-key="' + t + '">' + t + "</button>";
+      }).join("") + "</div>";
+    var cards = list.map(function (l) {
+      var a = assetBy(l.assetId);
+      var o = userBy(a.ownerId);
+      var p = projectBy(a.projectId);
+      return '<button type="button" class="market-card" data-action="open-listing" data-id="' + l.id + '" data-testid="listing-' + l.id + '" style="text-align:left;width:100%">' +
+        '<div class="row">' + visPill(a.visibility) + sampleTag(l) + verifiedPill(a.verified) + '<span class="pill muted">' + esc(a.type) + "</span></div>" +
+        "<h3>" + esc(a.name) + "</h3>" +
+        '<p class="small muted">' + esc(l.note) + "</p>" +
+        '<div class="row mt-12">' + avHtml(o, "sm") + '<span class="small">' + esc(o.name) + "</span>" +
+        (p ? '<span class="tiny muted">· ' + esc(p.name) + "</span>" : "") + "</div>" +
+        '<div class="price">$' + l.price + ' <span>USD · demo · ' + FEE + "% fee if it ever settled</span></div></button>";
+    }).join("");
+    var detail = "";
+    if (ui.marketOpen) {
+      var l = listingBy(ui.marketOpen);
+      var a = l && assetBy(l.assetId);
+      if (a) {
+        var o = userBy(a.ownerId);
+        detail = '<div class="card mt-16" data-testid="listing-detail"><div class="card-bd">' +
+          '<div class="row"><h2 style="font-size:18px;font-weight:640;letter-spacing:-.03em;flex:1">' + esc(a.name) + "</h2>" +
+          '<button class="btn ghost sm" data-action="close-listing">Close</button></div>' +
+          '<div class="row mt-8">' + sampleTag(l) + visPill(a.visibility) + verifiedPill(a.verified) + '<span class="pill muted">' + esc(a.type) + "</span></div>" +
+          '<p class="mt-12">' + esc(l.note) + "</p>" +
+          '<div class="tl-moved mt-12"><span>Provenance</span>' + esc(a.provenance) + "</div>" +
+          '<p class="small muted mt-12">Listed by ' + esc(o.name) + " on " + fmtD(l.listedAt) + ". Owner remains " + esc(o.name) + " until a transfer — which this demo does not complete.</p>" +
+          '<div class="row mt-16"><div class="price" style="font-size:22px;font-weight:640">$' + l.price + ' <span style="font-size:12px;color:var(--muted);font-weight:500">USD (demo)</span></div>' +
+          '<button class="btn" data-action="request-listing" data-id="' + l.id + '">Request (demo)</button></div>' +
+          '<p class="tiny muted mt-8">No payment is taken. If a market were live, a ' + FEE + "% fee would apply to a completed transfer. This is a second revenue line, alongside the subscription.</p>" +
+          "</div></div>";
+      }
+    }
+    return '<div class="page-enter">' + bannerHtml() +
+      '<div class="row mb-12"><div><h2 class="strong" style="font-size:15px;letter-spacing:-.02em">Marketplace</h2>' +
+      '<p class="muted small mt-8">Artifacts with an owner and a history, offered for transfer. Figures are demo placeholders. This is not a promise that work will sell, or that anyone will earn.</p></div></div>' +
+      chips +
+      '<div class="market-grid" data-testid="market-grid">' + (cards || empty("No listings in this view", "Public assets can be listed. This demo ships with sample listings.")) + "</div>" +
+      detail + "</div>";
+  }
+
+  function pageBilling() {
+    var plan = state.workspace.plan;
+    var used = state.workspace.agentUsed;
+    var lim = planLimit();
+    var pct = Math.min(100, Math.round((used / lim) * 100));
+    var free = priceCard("Free", "$0", "/ month", plan === "free", [
+      "A personal workspace",
+      "Up to 3 projects (demo)",
+      "50 agent runs / month (demo figures)",
+      "Timeline, branches, and a library",
+      "Any connected model",
+      "Feed and visibility"
+    ], plan === "free" ? "Current plan" : "Show Free (demo)", "free");
+    var pro = priceCard("Pro", "$16", "/ month (demo price)", plan === "pro", [
+      "A personal workspace, and a small team (demo)",
+      "No project cap (demo)",
+      "500 agent runs / month (demo figures)",
+      "Timeline, branches, and a library",
+      "Any connected model",
+      "Feed and visibility"
+    ], plan === "pro" ? "Current plan" : "Show Pro (demo)", "pro");
+    var usage = '<section class="card mt-16" data-testid="usage-meter"><div class="card-hd"><h2>Agent runs this month</h2><span class="pill sample">Demo figures</span></div><div class="card-bd">' +
+      '<div class="row"><strong class="tabular" style="font-size:22px;letter-spacing:-.03em">' + used + " / " + lim + '</strong><span class="muted small">' + (plan === "pro" ? "Pro" : "Free") + "</span></div>" +
+      '<div class="usage ' + (pct >= 100 ? "full" : pct >= 80 ? "warn" : "") + '"><span style="width:' + pct + '%"></span></div>' +
+      '<p class="tiny muted">Billing is a subscription (plan and included runs) plus a marketplace fee on completed transfers. Amounts here are demo placeholders, not a live offer.</p></div></section>';
+    var fee = '<section class="card mt-16" data-testid="marketplace-fee"><div class="card-hd"><h2>Marketplace fee</h2>' +
+      '<span class="pill sample">Second revenue line · demo</span></div><div class="card-bd">' +
+      '<div style="font-size:32px;font-weight:640;letter-spacing:-.04em">' + FEE + '<span style="font-size:14px;font-weight:500;color:var(--muted)">% of a completed transfer</span></div>' +
+      '<p class="small muted mt-12">If a transfer settled, the fee would apply to the listed price. The market is populated in this demo so you can walk through a listing; nothing is charged. The workspace itself is meant to stand on the subscription alone.</p>' +
+      "</div></section>";
+    return '<div class="page-enter">' + bannerHtml() +
+      '<p class="muted small mb-16">Two lines: a subscription, and a fee if the marketplace ever settles a transfer. Prices and allowances below are <strong>demo figures</strong>, not a live offer.</p>' +
+      '<div class="price-grid">' + free + pro + "</div>" + usage + fee + "</div>";
+  }
+  function priceCard(name, yen, unit, current, features, cta, plan) {
+    return '<section class="card price-card' + (current ? " current" : "") + '" data-testid="plan-' + plan + '">' +
+      (current ? '<span class="pill accent" style="position:absolute;top:16px;right:16px">Current</span>' : "") +
+      '<div class="plan">' + name + "</div>" +
+      '<div class="yen">' + yen + " <span>" + unit + "</span></div>" +
+      "<ul>" + features.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + "</ul>" +
+      '<button class="btn ' + (current ? "ghost" : "") + ' block" data-action="switch-plan" data-plan="' + plan + '"' + (current ? " disabled" : "") + ">" + esc(cta) + "</button>" +
+      '<p class="tiny muted mt-8">A display switch for this demo. Nothing is billed.</p></section>';
+  }
+
+  function pageSettings() {
+    var me = userBy(SELF);
+    var models = MODELS.map(function (m) {
+      var on = !!state.modelsConnected[m.id];
+      return '<div class="model-row"><i class="model-dot" style="background:' + m.color + ';width:10px;height:10px"></i>' +
+        '<div style="flex:1"><div class="strong">' + esc(m.name) + '</div><div class="tiny muted">' + esc(m.provider) + "</div></div>" +
+        '<label class="check"><input type="checkbox" data-action="toggle-model" data-id="' + m.id + '"' + (on ? " checked" : "") + "> Connected</label></div>";
+    }).join("");
+    var theme = getTheme();
+    return '<div class="page-enter">' + bannerHtml() +
+      '<div class="settings-block"><h2>Appearance</h2><p class="lead">Designed dark first. Light is first-class.</p>' +
+      '<div class="row"><button class="btn ' + (theme === "dark" ? "" : "ghost") + ' sm" data-action="set-theme" data-theme="dark">Dark</button>' +
+      '<button class="btn ' + (theme === "light" ? "" : "ghost") + ' sm" data-action="set-theme" data-theme="light">Light</button></div></div>' +
+      '<div class="settings-block"><h2>Workspace</h2><p class="lead">The name is saved in this browser.</p>' +
+      '<form class="form-grid" id="form-workspace" data-testid="form-workspace">' +
+      '<div class="field"><label for="ws-name">Workspace name</label><input id="ws-name" name="name" type="text" required value="' + esc(state.workspace.name) + '"></div>' +
+      '<div class="field"><label>Owner</label><input type="text" value="' + esc(me.name) + " — sample persona" + '" disabled>' +
+      '<span class="hint">Sample / demo data.</span></div>' +
+      '<div class="row"><button class="btn" type="submit">Save</button></div></form></div>' +
+      '<div class="settings-block"><h2>Connected models</h2><p class="lead">When you ask an agent, you pick from the models that are on. RayLee is not built around a single one.</p>' +
+      '<div class="card" style="padding:4px 18px">' + models + "</div></div>" +
+      '<div class="settings-block"><h2>Keyboard</h2><p class="lead">The palette is the fastest way through the product.</p>' +
+      '<button class="btn ghost sm" data-action="open-shortcuts">View shortcuts</button> ' +
+      '<button class="btn ghost sm" data-action="open-cmd">Open palette</button></div>' +
+      '<div class="settings-block"><h2>Export</h2><p class="lead">Download this workspace as JSON — including the social layer. It lives only in this browser until you do.</p>' +
+      '<button class="btn ghost" data-action="export-json" data-testid="btn-export">Export JSON</button></div>' +
+      '<div class="settings-block"><h2>Reset the sample</h2><p class="lead">Restores the original sample workspace. Activities, comments, and follows you added will be cleared. This cannot be undone. Theme is kept.</p>' +
+      '<button class="btn danger" data-action="reset-demo" data-testid="btn-reset">Reset demo data</button></div></div>';
+  }
+
+  function shortcutsHtml() {
+    var rows = [
+      ["Command palette", "⌘ / Ctrl K"],
+      ["Go to Home", "G then H"],
+      ["Go to Feed", "G then F"],
+      ["Go to Projects", "G then P"],
+      ["Go to Agents", "G then A"],
+      ["Go to Library", "G then L"],
+      ["Go to Map", "G then M"],
+      ["Go to Marketplace", "G then K"],
+      ["New activity (on a project)", "C"],
+      ["New agent run", "N"],
+      ["Toggle theme", "T"],
+      ["This list", "?"],
+      ["Close", "Esc"]
+    ];
+    return '<h2>Keyboard</h2><div class="shortcuts">' + rows.map(function (r) {
+      return "<div><span>" + esc(r[0]) + "</span><kbd>" + esc(r[1]) + "</kbd></div>";
+    }).join("") + '</div><div class="mt-16"><button class="btn ghost" data-action="close-shortcuts">Close</button></div>';
+  }
+
+  function cmdItemsFor(q) {
+    q = (q || "").trim().toLowerCase();
+    function fz(s) {
+      if (!q) return true;
+      s = s.toLowerCase();
+      if (s.indexOf(q) >= 0) return true;
+      var i = 0;
+      for (var k = 0; k < s.length; k++) { if (s[k] === q[i]) i++; }
+      return i === q.length;
+    }
+    var items = [];
+    function add(group, label, hint, action, keywords) {
+      var hay = (label + " " + (keywords || "") + " " + (hint || ""));
+      if (fz(hay)) items.push({ group: group, label: label, hint: hint, action: action });
+    }
+    add("Go to", "Home", "G H", { type: "nav", hash: "#/home" }, "today dashboard");
+    add("Go to", "Feed", "G F", { type: "nav", hash: "#/feed" }, "social");
+    add("Go to", "Projects", "G P", { type: "nav", hash: "#/projects" }, "");
+    add("Go to", "Agents", "G A", { type: "nav", hash: "#/agents" }, "run job");
+    add("Go to", "Library", "G L", { type: "nav", hash: "#/library" }, "assets artifacts");
+    add("Go to", "Map", "G M", { type: "nav", hash: "#/map" }, "timeline");
+    add("Go to", "Marketplace", "G K", { type: "nav", hash: "#/market" }, "listings");
+    add("Go to", "Billing", "", { type: "nav", hash: "#/billing" }, "pricing plan");
+    add("Go to", "Settings", "", { type: "nav", hash: "#/settings" }, "");
+    add("Go to", "Your profile", "", { type: "nav", hash: "#/profile/" + SELF }, "david");
+    ownProjects().forEach(function (p) { add("Projects", p.name, "Project", { type: "nav", hash: "#/projects/" + p.id }, p.summary); });
+    state.users.forEach(function (u) { add("People", u.name, u.sample ? "Sample" : "", { type: "nav", hash: "#/profile/" + u.id }, u.bio); });
+    add("Actions", "Add activity to the active project", "C", { type: "activity" }, "new timeline");
+    add("Actions", "Ask an agent", "N", { type: "nav", hash: "#/agents" }, "run");
+    add("Actions", "New project", "", { type: "project" }, "create");
+    add("Actions", "Toggle theme", "T", { type: "theme" }, "dark light");
+    add("Actions", "Keyboard shortcuts", "?", { type: "shortcuts" }, "help");
+    add("Actions", "Export JSON", "", { type: "export" }, "download");
+    return items;
+  }
+  function cmdHtml() {
+    var items = cmdItemsFor(ui.cmdQuery);
+    ui.cmdItems = items;
+    if (ui.cmdIndex >= items.length) ui.cmdIndex = Math.max(0, items.length - 1);
+    var groups = [];
+    items.forEach(function (it, i) {
+      if (!groups.length || groups[groups.length - 1].name !== it.group) groups.push({ name: it.group, items: [] });
+      groups[groups.length - 1].items.push({ it: it, i: i });
+    });
+    var body = items.length ? groups.map(function (g) {
+      return '<div class="cmdk-group">' + esc(g.name) + "</div>" + g.items.map(function (x) {
+        return '<div class="cmdk-item' + (x.i === ui.cmdIndex ? " on" : "") + '" data-action="cmd-run" data-index="' + x.i + '">' +
+          "<span>" + esc(x.it.label) + '</span><span class="hint">' + esc(x.it.hint || "") + "</span></div>";
+      }).join("");
+    }).join("") : '<div class="cmdk-empty">Nothing matches.</div>';
+    return '<div class="cmdk-bg" data-action="close-cmd" data-testid="cmdk"><div class="cmdk" role="dialog" aria-label="Command palette" onclick="event.stopPropagation()">' +
+      '<div class="cmdk-in">' + icon("search") +
+      '<input type="search" id="cmdk-input" placeholder="Type a command or search…" value="' + esc(ui.cmdQuery) + '" autocomplete="off" spellcheck="false" data-testid="cmdk-input">' +
+      "</div><div class=\"cmdk-list\" id=\"cmdk-list\">" + body + "</div>" +
+      '<div class="cmdk-foot"><span>↑↓ to move</span><span>↵ to open</span><span>esc to close</span></div>' +
+      "</div></div>";
+  }
+
+  function onbHtml() {
+    if (state.workspace.onboarded) return "";
+    var steps = [
+      { t: "Work should accrue.", b: "Every step, decision, and artifact lives on a timeline — with an owner, a history, and a place to come back to." },
+      { t: "Agents inherit that context.", b: "Ask an agent to continue from the project you already have. It can keep going while you’re away. You choose the model; RayLee is not tied to one." },
+      { t: "Share what’s ready.", b: "Publish a step to the feed, keep a ledger private, or walk the map of other people’s public work. A marketplace for artifacts sits next to that — when, and if, you want it." }
+    ];
+    var s = ui.onbStep || 0;
+    if (s < 0) s = 0;
+    if (s > 2) s = 2;
+    var step = steps[s];
+    return '<div class="onb-bg" data-testid="onboarding"><div class="onb">' +
+      '<div class="brand-mini">RayLee<span class="dot">.</span></div>' +
+      '<div class="step-dots"><i class="' + (s >= 0 ? "on" : "") + '"></i><i class="' + (s >= 1 ? "on" : "") + '"></i><i class="' + (s >= 2 ? "on" : "") + '"></i></div>' +
+      "<h2>" + esc(step.t) + "</h2><p>" + esc(step.b) + "</p>" +
+      '<div class="actions">' +
+      (s < 2 ? '<button class="btn" data-action="onb-next" data-testid="onb-next">Continue</button>' :
+        '<button class="btn" data-action="onb-done" data-testid="onb-done">Explore the sample workspace</button>') +
+      (s > 0 ? '<button class="btn ghost" data-action="onb-back">Back</button>' : "") +
+      '<div class="spacer"></div><button class="btn ghost" data-action="onb-done" data-testid="onb-done">Skip</button>' +
+      "</div><p class=\"tiny muted mt-16\">A sample workspace is already waiting — David Chen, 40, Seattle. Other people you’ll see are samples too.</p></div></div>";
+  }
+
+
+  function modalHtml() {
+    if (ui.shortcutsOpen) return '<div class="modal-bg" data-action="close-shortcuts"><div class="modal" role="dialog" aria-modal="true" onclick="event.stopPropagation()">' + shortcutsHtml() + "</div></div>";
+    if (!ui.modal) return "";
+    var inner = "";
+    if (ui.modal.type === "activity") inner = modalActivity(ui.modal.projectId);
+    if (ui.modal.type === "project") inner = modalNewProject();
+    if (ui.modal.type === "asset") inner = modalAsset();
+    if (ui.modal.type === "vis") inner = modalVis(ui.modal.kind, ui.modal.id);
+    return '<div class="modal-bg" data-action="backdrop-modal" data-testid="modal"><div class="modal" role="dialog" aria-modal="true">' + inner + "</div></div>";
+  }
+  function titleFor(r) {
+    var map = { home: "Home", feed: "Feed", projects: r.id ? "" : "Projects", agents: "Agents", library: "Library", map: "Map", market: "Marketplace", billing: "Billing", settings: "Settings", profile: "Profile" };
+    if (r.name === "projects" && r.id) { var p = projectBy(r.id); return p ? esc(p.name) : "Project"; }
+    if (r.name === "profile") { var u = userBy(r.id || SELF); return esc(u.name); }
+    return map[r.name] || "RayLee";
+  }
+  function crumbFor(r) {
+    if (r.name === "projects" && r.id) return '<a href="#/projects" class="crumb" style="color:inherit">Projects</a>';
+    return "";
+  }
+
+  function render() {
+    if (!state) state = load();
+    applyTheme(getTheme());
+    var r = route();
+    var body = "";
+    if (r.name === "home") body = pageHome();
+    else if (r.name === "feed") body = pageFeed();
+    else if (r.name === "projects" && r.id) body = pageProjectDetail(r.id);
+    else if (r.name === "projects") body = pageProjects();
+    else if (r.name === "agents") body = pageAgents();
+    else if (r.name === "library") body = pageLibrary();
+    else if (r.name === "map") body = pageMap();
+    else if (r.name === "market") body = pageMarket();
+    else if (r.name === "billing") body = pageBilling();
+    else if (r.name === "settings") body = pageSettings();
+    else if (r.name === "profile") body = pageProfile(r.id || SELF);
+    else body = pageHome();
+
+    var app = document.getElementById("app");
+    app.innerHTML =
+      '<div class="app">' +
+        sidebarHtml(r) +
+        '<div class="mainwrap">' +
+          topbarHtml(r, titleFor(r), crumbFor(r)) +
+          '<main class="content' + (r.name === "map" ? " wide" : "") + '" data-testid="page-' + r.name + '" id="main">' + body + "</main>" +
+        "</div>" +
+        bottomNavHtml(r) +
+        '<div class="backdrop' + (ui.menuOpen ? " on" : "") + '" data-action="close-menu"></div>' +
+        modalHtml() +
+        (ui.cmdOpen ? cmdHtml() : "") +
+        onbHtml() +
+      "</div>";
+    var pageTitle = "RayLee";
+    if (r.name === "projects" && r.id && projectBy(r.id)) pageTitle = projectBy(r.id).name + " — RayLee";
+    else if (r.name === "home") pageTitle = "RayLee — The workspace your agents inherit";
+    else pageTitle = (titleFor(r).replace(/<[^>]+>/g, "") || "RayLee") + " — RayLee";
+    document.title = pageTitle;
+    bindDynamic();
+    if (ui.cmdOpen) {
+      var inp = document.getElementById("cmdk-input");
+      if (inp) {
+        inp.focus();
+        inp.value = ui.cmdQuery;
+        try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {}
+        inp.addEventListener("input", function () {
+          ui.cmdQuery = inp.value;
+          ui.cmdIndex = 0;
+          var list = document.getElementById("cmdk-list");
+          var items = cmdItemsFor(ui.cmdQuery);
+          ui.cmdItems = items;
+          // re-render just the list
+          render();
+          var inp2 = document.getElementById("cmdk-input");
+          if (inp2) { inp2.focus(); inp2.value = ui.cmdQuery; try { inp2.setSelectionRange(inp2.value.length, inp2.value.length); } catch (e2) {} }
+        });
+      }
+    }
+  }
+
+  function shouldDeferRender() {
+    var ae = document.activeElement;
+    return ae && ae.matches && ae.matches("input, textarea, select") && ae.closest("form") && !ae.closest(".modal") && !ae.closest(".cmdk");
+  }
+  function safeRender() {
+    if (shouldDeferRender()) { ui.pendingRender = true; return; }
+    ui.pendingRender = false;
+    render();
+  }
+  function bindDynamic() {
+    var asAsset = document.getElementById("activity-as-asset");
+    var extra = document.getElementById("asset-extra");
+    if (asAsset && extra) {
+      asAsset.addEventListener("change", function () { extra.style.display = asAsset.checked ? "grid" : "none"; });
+    }
+  }
+  function closeModal() { ui.modal = null; ui.shortcutsOpen = false; render(); }
+
+  function addActivityFromForm(form) {
+    var projectId = form.getAttribute("data-project");
+    var p = projectBy(projectId);
+    if (!p) return;
+    var what = (form.what.value || "").trim();
+    var moved = (form.movedTo.value || "").trim();
+    if (!what || !moved) return;
+    var vis = form.visibility.value;
+    if (visRank(vis) > visRank(p.visibility)) vis = p.visibility;
+    var act = {
+      id: uid("act"), projectId: projectId, ownerId: SELF,
+      at: fromLocalInput(form.at.value), what: what, movedTo: moved,
+      source: "user", visibility: vis, sample: false,
+      branchId: (form.branchId && form.branchId.value) || ""
+    };
+    if (form.asAsset && form.asAsset.checked) {
+      var aname = (form.assetName.value || "").trim() || (what.slice(0, 40) + (what.length > 40 ? "…" : ""));
+      var ast = {
+        id: uid("ast"), projectId: projectId, ownerId: SELF, name: aname, type: form.assetType.value,
+        provenance: "Registered by David Chen from the activity on " + fmtDT(act.at) + ": “" + what + ".”",
+        verified: !!(form.assetVerified && form.assetVerified.checked),
+        visibility: vis, createdAt: act.at, sample: false
+      };
+      state.assets.unshift(ast);
+      act.assetId = ast.id;
+      if (ast.verified) act.verified = true;
+    }
+    state.activities.push(act);
+    save();
+    ui.modal = null;
+    toast("Added to the timeline.");
+    var ev = effectiveVis(p, act);
+    if (ev === "public" || ev === "followers") scheduleReaction(act.id);
+    navTo("#/projects/" + projectId);
+    render();
+  }
+  function addProjectFromForm(form) {
+    var name = (form.name.value || "").trim();
+    var summary = (form.summary.value || "").trim();
+    if (!name) return;
+    var p = { id: uid("prj"), ownerId: SELF, name: name, summary: summary, status: "active", visibility: form.visibility.value, startedAt: nowISO(), sample: false };
+    state.projects.push(p);
+    save();
+    ui.modal = null;
+    toast("Project created.");
+    navTo("#/projects/" + p.id);
+    render();
+  }
+  function addAssetFromForm(form) {
+    var p = projectBy(form.projectId.value);
+    var vis = form.visibility.value;
+    if (p && visRank(vis) > visRank(p.visibility)) vis = p.visibility;
+    var ast = {
+      id: uid("ast"), projectId: form.projectId.value, ownerId: SELF,
+      name: (form.name.value || "").trim(), type: form.type.value,
+      provenance: (form.provenance.value || "").trim(),
+      verified: !!form.verified.checked, visibility: vis, createdAt: nowISO(), sample: false
+    };
+    if (!ast.name || !ast.provenance) return;
+    state.assets.unshift(ast);
+    save();
+    ui.modal = null;
+    toast("Added to the library.");
+    render();
+  }
+  function requestAgent(form) {
+    var lim = planLimit();
+    if (state.workspace.agentUsed >= lim) { toast("This month’s included runs are used (demo)."); return; }
+    var model = form.model.value;
+    if (!state.modelsConnected[model]) { toast("That model isn’t connected."); return; }
+    var job = {
+      id: uid("ag"), projectId: form.projectId.value, title: (form.title.value || "").trim(),
+      model: model, status: "queued", request: (form.request.value || "").trim(), result: "",
+      requestedAt: nowISO(), startedAt: null, completedAt: null,
+      whileAway: false, autoProgress: true, sample: false, visibility: form.visibility.value
+    };
+    if (!job.title || !job.request) return;
+    state.agents.unshift(job);
+    state.workspace.agentUsed += 1;
+    save();
+    toast("Queued. It will start in a moment.");
+    form.reset();
+    render();
+  }
+  function completeJob(job) {
+    job.status = "completed";
+    job.completedAt = nowISO();
+    var mname = modelName(job.model);
+    job.result = "(Simulated demo output — no model was called.) Finished “" + job.title + ".” The result is filed on the project timeline and in the library. Model: " + mname + ".";
+    var p = projectBy(job.projectId);
+    var vis = job.visibility || (p && p.visibility) || "private";
+    if (p && visRank(vis) > visRank(p.visibility)) vis = p.visibility;
+    var ast = {
+      id: uid("ast"), projectId: job.projectId, ownerId: SELF,
+      name: "Result: " + job.title, type: "Deliverable",
+      provenance: "Agent (" + mname + ") produced this on " + fmtDT(job.completedAt) + ", at David Chen’s request.",
+      verified: false, visibility: vis, createdAt: job.completedAt, sample: false, model: job.model
+    };
+    state.assets.unshift(ast);
+    var act = {
+      id: uid("act"), projectId: job.projectId, ownerId: SELF, at: job.completedAt,
+      what: "Agent (" + mname + ") finished “" + job.title + ".”",
+      movedTo: "A result was added to the library",
+      source: "agent", model: job.model, agentId: job.id, visibility: vis, sample: false, assetId: ast.id
+    };
+    state.activities.push(act);
+    addNotification({ type: "agent_complete", agentId: job.id, text: "Agent “" + job.title + "” (" + mname + ") finished." });
+    if (effectiveVis(p, act) === "public" || effectiveVis(p, act) === "followers") scheduleReaction(act.id);
+  }
+  function progressAgents() {
+    var now = Date.now();
+    var changed = false;
+    state.agents.forEach(function (job) {
+      if (!job.autoProgress) return;
+      var st = normalizeStatus(job.status);
+      if (st === "queued") {
+        if (now - new Date(job.requestedAt).getTime() >= 2000) {
+          job.status = "running"; job.startedAt = nowISO(); changed = true;
+        }
+      } else if (st === "running") {
+        if (job.startedAt && now - new Date(job.startedAt).getTime() >= 5000) {
+          completeJob(job); changed = true;
+        }
+      }
+    });
+    if (changed) { save(); safeRender(); }
+    return changed;
+  }
+
+  var SIM_COMMENTS = [
+    "The way this is recorded will be easy to come back to.",
+    "Having the “now” state written down makes the next step clearer.",
+    "I stalled in a similar place — useful to see how you moved.",
+    "Glad the in-between is on the record, not just the finish.",
+    "The visibility split is something I want to copy."
+  ];
+  function otherUsers() { return state.users.filter(function (u) { return u.id !== SELF; }); }
+  function scheduleReaction(activityId) {
+    setTimeout(function () { simulateReaction(activityId); }, 5000 + Math.floor(Math.random() * 4000));
+  }
+  function simulateReaction(activityId) {
+    var act = activityBy(activityId);
+    if (!act) return;
+    var ev = effectiveVis(projectBy(act.projectId), act);
+    if (ev === "private") return;
+    var cands = otherUsers().filter(function (u) {
+      if (ev === "followers" && !isFollowing(u.id, SELF)) return false;
+      return true;
+    });
+    if (!cands.length) return;
+    var u = cands[Math.floor(Math.random() * cands.length)];
+    var did = false;
+    if (!state.likes.some(function (l) { return l.activityId === activityId && l.userId === u.id; })) {
+      state.likes.push({ id: uid("lk"), activityId: activityId, userId: u.id, at: nowISO(), sample: true, simulated: true });
+      addNotification({ type: "like", fromUserId: u.id, activityId: activityId, text: u.name + " liked your activity." });
+      did = true;
+    }
+    if (!state.comments.some(function (c) { return c.activityId === activityId && c.userId === u.id; }) && Math.random() < 0.7) {
+      var body = SIM_COMMENTS[Math.floor(Math.random() * SIM_COMMENTS.length)];
+      state.comments.push({ id: uid("cm"), activityId: activityId, userId: u.id, body: body, at: nowISO(), sample: true, simulated: true });
+      addNotification({ type: "comment", fromUserId: u.id, activityId: activityId, text: u.name + " commented on your activity." });
+      did = true;
+    }
+    if (did) {
+      state.sim.reactionsScheduled = (state.sim.reactionsScheduled || 0) + 1;
+      state.sim.lastAt = nowISO();
+      save();
+      safeRender();
+      toast(u.name + " responded (sample).");
+    }
+  }
+  function occasionalSim() {
+    if ((state.sim.reactionsScheduled || 0) >= 4) return;
+    if (state.sim.lastAt && Date.now() - new Date(state.sim.lastAt).getTime() < 20000) return;
+    var publicMine = state.activities.filter(function (a) {
+      if (a.ownerId !== SELF) return false;
+      var ev = effectiveVis(projectBy(a.projectId), a);
+      return ev === "public" || ev === "followers";
+    });
+    var options = [];
+    publicMine.forEach(function (a) {
+      otherUsers().forEach(function (u) {
+        if (!state.likes.some(function (l) { return l.activityId === a.id && l.userId === u.id; })) options.push(a.id);
+      });
+    });
+    if (!options.length) return;
+    if (Math.random() < 0.35) simulateReaction(options[Math.floor(Math.random() * options.length)]);
+  }
+
+  function toggleLike(actId) {
+    var act = activityBy(actId);
+    if (!act || !canViewActivity(act)) return;
+    var i = -1;
+    state.likes.forEach(function (l, idx) { if (l.activityId === actId && l.userId === SELF) i = idx; });
+    if (i >= 0) state.likes.splice(i, 1);
+    else state.likes.push({ id: uid("lk"), activityId: actId, userId: SELF, at: nowISO() });
+    save();
+    render();
+  }
+  function addComment(actId, body) {
+    body = (body || "").trim();
+    if (!body) return;
+    var act = activityBy(actId);
+    if (!act || !canViewActivity(act)) return;
+    state.comments.push({ id: uid("cm"), activityId: actId, userId: SELF, body: body, at: nowISO() });
+    ui.commentsOpen[actId] = true;
+    save();
+    render();
+    toast("Comment added.");
+  }
+  function followUser(id) {
+    if (id === SELF || isFollowing(SELF, id)) return;
+    state.follows.push({ followerId: SELF, followeeId: id, at: nowISO() });
+    save();
+    toast("Following " + userBy(id).name + ".");
+    render();
+  }
+  function unfollowUser(id) {
+    state.follows = state.follows.filter(function (f) { return !(f.followerId === SELF && f.followeeId === id); });
+    save();
+    toast("Unfollowed.");
+    render();
+  }
+  function exportJson() {
+    var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "raylee-workspace-demo.json";
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    toast("Exported.");
+  }
+  function resetDemo() {
+    if (!confirm("Reset to the original sample workspace? Anything you added will be cleared. This cannot be undone.")) return;
+    var onboarded = true;
+    state = seed();
+    state.workspace.onboarded = onboarded;
+    save();
+    ui.modal = null;
+    ui.commentsOpen = {};
+    toast("Sample workspace restored.");
+    navTo("#/home");
+    render();
+  }
+  function finishOnboard() {
+    state.workspace.onboarded = true;
+    save();
+    render();
+  }
+  function runCmd(item) {
+    if (!item) return;
+    ui.cmdOpen = false;
+    ui.cmdQuery = "";
+    var a = item.action;
+    if (a.type === "nav") navTo(a.hash);
+    else if (a.type === "theme") { toggleTheme(); toast(getTheme() === "dark" ? "Dark theme." : "Light theme."); return; }
+    else if (a.type === "shortcuts") { ui.shortcutsOpen = true; render(); return; }
+    else if (a.type === "export") { exportJson(); render(); return; }
+    else if (a.type === "activity") {
+      var pid = state.workspace.activeProjectId || (ownProjects()[0] && ownProjects()[0].id);
+      if (pid) ui.modal = { type: "activity", projectId: pid };
+      render();
+      return;
+    } else if (a.type === "project") { ui.modal = { type: "project" }; render(); return; }
+    render();
+  }
+  function openCmd() {
+    ui.cmdOpen = true;
+    ui.cmdQuery = "";
+    ui.cmdIndex = 0;
+    ui.notifOpen = false;
+    render();
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (ui.notifOpen && !t.closest(".notif-wrap") && !t.closest("[data-action=toggle-notif]")) {
+      ui.notifOpen = false;
+      if (!t.closest("[data-action]")) { render(); }
+    }
+    var circle = t.closest && t.closest("circle[data-action=map-tip]");
+    if (circle) {
+      ui.mapTip = circle.getAttribute("data-id");
+      render();
+      return;
+    }
+    var btn = t.closest("[data-action]");
+    if (!btn) return;
+    var action = btn.getAttribute("data-action");
+    var id = btn.getAttribute("data-id");
+    if (action === "toggle-menu") { e.preventDefault(); ui.menuOpen = !ui.menuOpen; render(); return; }
+    if (action === "close-menu") { ui.menuOpen = false; render(); return; }
+    if (action === "toggle-notif") { e.preventDefault(); e.stopPropagation(); ui.notifOpen = !ui.notifOpen; render(); return; }
+    if (action === "read-all-notif") { e.preventDefault(); state.notifications.forEach(function (n) { n.read = true; }); save(); render(); return; }
+    if (action === "read-notif") {
+      var n = state.notifications.filter(function (x) { return x.id === id; })[0];
+      if (n) n.read = true;
+      ui.notifOpen = false;
+      save();
+      return;
+    }
+    if (action === "open-activity") { e.preventDefault(); ui.modal = { type: "activity", projectId: btn.getAttribute("data-project") }; render(); return; }
+    if (action === "open-project-new") { e.preventDefault(); ui.modal = { type: "project" }; render(); return; }
+    if (action === "open-asset") { e.preventDefault(); ui.modal = { type: "asset" }; render(); return; }
+    if (action === "close-modal") { e.preventDefault(); closeModal(); return; }
+    if (action === "backdrop-modal") { if (t.classList.contains("modal-bg")) closeModal(); return; }
+    if (action === "set-active") { e.preventDefault(); state.workspace.activeProjectId = id; save(); toast("Active project updated."); render(); return; }
+    if (action === "edit-vis") { e.preventDefault(); ui.modal = { type: "vis", kind: "activity", id: id }; render(); return; }
+    if (action === "edit-proj-vis") { e.preventDefault(); ui.modal = { type: "vis", kind: "project", id: id }; render(); return; }
+    if (action === "agent-filter") { ui.agentFilter = btn.getAttribute("data-key"); render(); return; }
+    if (action === "asset-type") { ui.assetType = btn.getAttribute("data-key"); render(); return; }
+    if (action === "asset-proj") { ui.assetProj = btn.getAttribute("data-key"); render(); return; }
+    if (action === "asset-ver") {
+      var k = btn.getAttribute("data-key");
+      ui.assetVerified = ui.assetVerified === k ? "all" : k;
+      render();
+      return;
+    }
+    if (action === "feed-filter") { ui.feedFilter = btn.getAttribute("data-key"); render(); return; }
+    if (action === "profile-tab") { ui.profileTab = btn.getAttribute("data-key"); render(); return; }
+    if (action === "like") { e.preventDefault(); toggleLike(id); return; }
+    if (action === "toggle-comments") { e.preventDefault(); ui.commentsOpen[id] = !ui.commentsOpen[id]; render(); return; }
+    if (action === "follow") { e.preventDefault(); followUser(id); return; }
+    if (action === "unfollow") { e.preventDefault(); if (confirm("Unfollow " + userBy(id).name + "?")) unfollowUser(id); return; }
+    if (action === "map-tip") { e.preventDefault(); ui.mapTip = id; render(); return; }
+    if (action === "switch-plan") {
+      e.preventDefault();
+      state.workspace.plan = btn.getAttribute("data-plan");
+      save();
+      toast("Plan display updated (demo). Nothing was billed.");
+      render();
+      return;
+    }
+    if (action === "export-json") { e.preventDefault(); exportJson(); return; }
+    if (action === "reset-demo") { e.preventDefault(); resetDemo(); return; }
+    if (action === "toggle-theme") { e.preventDefault(); toggleTheme(); return; }
+    if (action === "set-theme") { e.preventDefault(); applyTheme(btn.getAttribute("data-theme")); render(); return; }
+    if (action === "open-cmd") { e.preventDefault(); openCmd(); return; }
+    if (action === "close-cmd") { if (t.classList.contains("cmdk-bg")) { ui.cmdOpen = false; render(); } return; }
+    if (action === "cmd-run") { e.preventDefault(); runCmd(ui.cmdItems[parseInt(btn.getAttribute("data-index"), 10)]); return; }
+    if (action === "open-shortcuts") { e.preventDefault(); ui.shortcutsOpen = true; ui.cmdOpen = false; render(); return; }
+    if (action === "close-shortcuts") { e.preventDefault(); ui.shortcutsOpen = false; render(); return; }
+    if (action === "dismiss-banner") { e.preventDefault(); state.workspace.bannerDismissed = true; ui.bannerDismissed = true; save(); render(); return; }
+    if (action === "onb-next") { e.preventDefault(); ui.onbStep = (ui.onbStep || 0) + 1; render(); return; }
+    if (action === "onb-back") { e.preventDefault(); ui.onbStep = Math.max(0, (ui.onbStep || 0) - 1); render(); return; }
+    if (action === "onb-done") { e.preventDefault(); finishOnboard(); return; }
+    if (action === "market-filter") { ui.marketFilter = btn.getAttribute("data-key"); render(); return; }
+    if (action === "open-listing") { e.preventDefault(); ui.marketOpen = id; render(); return; }
+    if (action === "close-listing") { e.preventDefault(); ui.marketOpen = null; render(); return; }
+    if (action === "request-listing") {
+      e.preventDefault();
+      toast("Demo only — no request was sent, and nothing was charged. A " + FEE + "% fee would apply to a real transfer.");
+      return;
+    }
+  });
+
+  document.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t && t.getAttribute("data-action") === "toggle-model") {
+      var mid = t.getAttribute("data-id");
+      var on = !!t.checked;
+      var count = 0;
+      Object.keys(state.modelsConnected).forEach(function (k) { if (k === mid ? on : state.modelsConnected[k]) count++; });
+      if (!on && count < 1) { t.checked = true; toast("Keep at least one model connected."); return; }
+      state.modelsConnected[mid] = on;
+      save();
+      toast(modelName(mid) + (on ? " connected." : " disconnected."));
+    }
+  });
+
+  document.addEventListener("submit", function (e) {
+    var form = e.target;
+    if (!form) return;
+    if (form.classList.contains("comment-form") || form.getAttribute("data-action") === "comment") {
+      e.preventDefault();
+      addComment(form.getAttribute("data-id"), form.body.value);
+      return;
+    }
+    if (!form.id) return;
+    e.preventDefault();
+    if (form.id === "form-add-activity") addActivityFromForm(form);
+    else if (form.id === "form-add-project") addProjectFromForm(form);
+    else if (form.id === "form-add-asset") addAssetFromForm(form);
+    else if (form.id === "form-agent") requestAgent(form);
+    else if (form.id === "form-workspace") {
+      var name = (form.name.value || "").trim();
+      if (!name) return;
+      state.workspace.name = name;
+      save();
+      toast("Workspace name saved.");
+      render();
+    } else if (form.id === "form-vis") {
+      var vis = form.visibility.value;
+      var kind = form.getAttribute("data-kind");
+      var vid = form.getAttribute("data-id");
+      if (kind === "activity") {
+        var a = activityBy(vid);
+        var p = a && projectBy(a.projectId);
+        if (a) {
+          if (p && visRank(vis) > visRank(p.visibility)) vis = p.visibility;
+          a.visibility = vis;
+          if (a.assetId) { var ast = assetBy(a.assetId); if (ast) ast.visibility = vis; }
+          toast("Visibility updated.");
+        }
+      } else {
+        var pr = projectBy(vid);
+        if (pr) { pr.visibility = vis; toast("Project visibility updated."); }
+      }
+      save();
+      ui.modal = null;
+      render();
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    var meta = e.metaKey || e.ctrlKey;
+    var inField = e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT" || e.target.isContentEditable);
+    if (meta && (e.key === "k" || e.key === "K")) {
+      e.preventDefault();
+      if (ui.cmdOpen) { ui.cmdOpen = false; render(); }
+      else openCmd();
+      return;
+    }
+    if (ui.cmdOpen) {
+      if (e.key === "Escape") { e.preventDefault(); ui.cmdOpen = false; render(); return; }
+      if (e.key === "ArrowDown") { e.preventDefault(); ui.cmdIndex = Math.min(ui.cmdItems.length - 1, ui.cmdIndex + 1); render(); return; }
+      if (e.key === "ArrowUp") { e.preventDefault(); ui.cmdIndex = Math.max(0, ui.cmdIndex - 1); render(); return; }
+      if (e.key === "Enter") { e.preventDefault(); runCmd(ui.cmdItems[ui.cmdIndex]); return; }
+      return;
+    }
+    if (e.key === "Escape") {
+      if (ui.modal || ui.shortcutsOpen) { closeModal(); return; }
+      if (ui.notifOpen) { ui.notifOpen = false; render(); return; }
+      if (ui.menuOpen) { ui.menuOpen = false; render(); }
+      return;
+    }
+    if (inField) return;
+    if (!state || !state.workspace || !state.workspace.onboarded) return;
+    if (e.key === "?" ) { e.preventDefault(); ui.shortcutsOpen = !ui.shortcutsOpen; render(); return; }
+    if (e.key === "t" || e.key === "T") { e.preventDefault(); toggleTheme(); return; }
+    if (e.key === "n" || e.key === "N") { e.preventDefault(); navTo("#/agents"); return; }
+    if (e.key === "c" || e.key === "C") {
+      e.preventDefault();
+      var r = route();
+      var pid = (r.name === "projects" && r.id) ? r.id : (state.workspace.activeProjectId || (ownProjects()[0] && ownProjects()[0].id));
+      if (pid) { ui.modal = { type: "activity", projectId: pid }; render(); }
+      return;
+    }
+    if (ui.goChord) {
+      ui.goChord = false;
+      var map = { h: "#/home", H: "#/home", f: "#/feed", F: "#/feed", p: "#/projects", P: "#/projects", a: "#/agents", A: "#/agents", l: "#/library", L: "#/library", m: "#/map", M: "#/map", k: "#/market", K: "#/market", b: "#/billing", B: "#/billing", s: "#/settings", S: "#/settings" };
+      if (map[e.key]) { e.preventDefault(); navTo(map[e.key]); }
+      return;
+    }
+    if (e.key === "g" || e.key === "G") {
+      e.preventDefault();
+      ui.goChord = true;
+      setTimeout(function () { ui.goChord = false; }, 800);
+    }
+  });
+
+  document.addEventListener("focusout", function () {
+    if (ui.pendingRender) setTimeout(function () { if (!shouldDeferRender()) safeRender(); }, 0);
+  });
+
+  window.addEventListener("hashchange", function () {
+    ui.menuOpen = false;
+    ui.notifOpen = false;
+    ui.modal = null;
+    ui.cmdOpen = false;
+    ui.shortcutsOpen = false;
+    render();
+    window.scrollTo(0, 0);
+  });
+
+  function init() {
+    state = load();
+    applyTheme(getTheme());
+    var h = location.hash;
+    if (!h || h === "#" || h === "#/") location.hash = "#/home";
+    render();
+    setInterval(function () { if (state) progressAgents(); }, 800);
+    setInterval(function () { if (state && state.workspace.onboarded) occasionalSim(); }, 18000);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+</script>
 </body>
 </html>

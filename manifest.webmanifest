@@ -1,9 +1,0 @@
-{
-  "name": "RayLee",
-  "short_name": "RayLee",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#07080c",
-  "theme_color": "#07080c",
-  "orientation": "portrait"
-}
