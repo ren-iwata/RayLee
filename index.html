@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#07080c" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <title>RayLee</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="universe" aria-label="星図"></canvas>
+
+    <div id="hud" hidden>
+      <div class="hud-top">
+        <div id="currency" class="currency" aria-live="polite"></div>
+        <div class="hud-actions">
+          <button type="button" id="btn-my-star" class="icon-btn" aria-label="自分の星へ">✦</button>
+          <button type="button" id="btn-zoom-out" class="icon-btn" aria-label="宇宙をひく">◎</button>
+          <button type="button" id="btn-proto" class="icon-btn proto-btn" aria-label="試作メニュー">試</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="whispers" aria-live="polite"></div>
+
+    <div id="sheet" class="sheet" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <button type="button" class="sheet-close" id="sheet-close" aria-label="閉じる">×</button>
+      <div id="sheet-body" class="sheet-body"></div>
+    </div>
+
+    <div id="hearing" class="overlay" hidden>
+      <div class="hearing-inner">
+        <p id="hearing-line" class="hearing-line"></p>
+        <div id="hearing-input-wrap" hidden>
+          <textarea id="hearing-input" rows="3" maxlength="240" enterkeyhint="done"></textarea>
+          <button type="button" id="hearing-submit">答える</button>
+          <button type="button" id="hearing-skip" class="text-btn">いまは、言葉にしない</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cinematic" class="overlay" hidden>
+      <div id="cinematic-body" class="cinematic-body"></div>
+    </div>
+
+    <div id="proto" class="overlay proto-overlay" hidden>
+      <div class="proto-panel">
+        <h2>試作のためのスイッチ</h2>
+        <p class="proto-note">ここにあるものは、製品として未決定です。試作で動かすためだけの仮の操作です。ここで選んだことを、決定済みとしては扱いません。</p>
+
+        <section>
+          <h3>マップの起こし方 <span class="tag">未決定</span></h3>
+          <p class="proto-note">個人が開くのか、運営が場として開くのかは未決定です。</p>
+          <div class="seg" id="proto-map-auth">
+            <button type="button" data-value="undecided">未設定</button>
+            <button type="button" data-value="individual">個人が開く</button>
+            <button type="button" data-value="operated">運営が開く</button>
+          </div>
+        </section>
+
+        <section>
+          <h3>夜を越える <span class="tag">試作操作</span></h3>
+          <p class="proto-note">いないあいだに衛星が働く様子を見るための、時間の送りです。</p>
+          <button type="button" id="proto-skip-time" class="proto-action">夜を越える</button>
+        </section>
+
+        <section>
+          <h3>記録</h3>
+          <button type="button" id="proto-reset" class="proto-action danger">記録を消して、はじめから</button>
+        </section>
+
+        <button type="button" id="proto-close" class="text-btn">閉じる</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
